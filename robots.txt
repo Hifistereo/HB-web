@@ -1,0 +1,6 @@
+# henrix.lv — all search engines and AI crawlers welcome
+User-agent: *
+Allow: /
+Disallow: /_source/
+
+Sitemap: https://henrix.lv/sitemap.xml
