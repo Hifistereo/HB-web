@@ -1,0 +1,5 @@
+/* Minimal element defaults so cards and kits render on-brand. */
+html,body{margin:0;background:var(--surface-page);color:var(--text-body);font-family:var(--font-body);font-weight:var(--fw-light);-webkit-font-smoothing:antialiased}
+a{color:var(--link);text-decoration:underline;text-underline-offset:2px}
+a:hover{color:var(--link-hover)}
+strong,b{color:var(--text-strong);font-weight:var(--fw-bold)}

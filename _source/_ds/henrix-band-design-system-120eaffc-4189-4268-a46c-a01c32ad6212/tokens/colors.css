@@ -1,0 +1,60 @@
+/* Henrix Band — color tokens. Sampled from the offer booklet renders. */
+:root{
+/* Base: night-stage neutrals */
+--hb-ink-950:#06060E;
+--hb-ink-900:#0A0A14;
+--hb-ink-850:#0E0E1C;
+--hb-ink-800:#131429;
+--hb-ink-700:#1C1D36;
+--hb-ink-600:#2F2E40;
+--hb-ink-500:#3A3950;
+--hb-ink-400:#6E6D80;
+--hb-ink-300:#9C9BAE;
+--hb-ink-200:#B9B8C8;
+--hb-ink-100:#DCDBE6;
+--hb-ink-50:#F2F1F8;
+/* Stage-light accents — one per tier */
+--hb-cyan-500:#3DC6D9;
+--hb-cyan-400:#5ACFDF;
+--hb-cyan-600:#2FA9C4;
+--hb-violet-500:#6A4FF6;
+--hb-violet-400:#8F7DF5;
+--hb-violet-300:#A096DF;
+--hb-purple-500:#9B4FE0;
+--hb-magenta-500:#D941C8;
+--hb-magenta-400:#E06ACF;
+/* Wordmark X gradient (sky → indigo) */
+--hb-x-top:#46A6EC;
+--hb-x-bottom:#6260F8;
+/* Gradients */
+--gradient-x:linear-gradient(180deg,var(--hb-x-top) 0%,var(--hb-x-bottom) 100%); /* @kind color */
+--gradient-spectrum:linear-gradient(90deg,var(--hb-cyan-500) 0%,var(--hb-violet-500) 40%,var(--hb-purple-500) 70%,var(--hb-magenta-500) 100%); /* @kind color */
+--gradient-rule:linear-gradient(90deg,var(--hb-magenta-400) 0%,var(--hb-cyan-500) 100%); /* @kind color */
+--gradient-heading:linear-gradient(180deg,#FFFFFF 0%,#D6D5E2 100%); /* @kind color */
+--scrim-bottom:linear-gradient(180deg,rgba(10,10,20,0) 0%,rgba(10,10,20,.55) 55%,var(--hb-ink-900) 100%); /* @kind color */
+--scrim-left:linear-gradient(90deg,rgba(10,10,20,.92) 0%,rgba(10,10,20,.6) 45%,rgba(10,10,20,.15) 100%); /* @kind color */
+
+/* Semantic aliases */
+--surface-page:var(--hb-ink-900);
+--surface-deep:var(--hb-ink-950);
+--surface-card:var(--hb-ink-800);
+--surface-card-raised:var(--hb-ink-700);
+--border-rule:var(--hb-ink-600);
+--border-chip:var(--hb-ink-500);
+--text-heading:var(--hb-ink-50);
+--text-strong:#FFFFFF;
+--text-body:var(--hb-ink-200);
+--text-muted:var(--hb-ink-300);
+--text-faint:var(--hb-ink-400);
+--text-accent:var(--hb-cyan-500);
+--link:var(--hb-cyan-500);
+--link-hover:var(--hb-cyan-400);
+/* Tier mapping */
+--tier-essential:var(--hb-cyan-500);
+--tier-essential-text:var(--hb-cyan-500);
+--tier-live:var(--hb-violet-500);
+--tier-live-text:var(--hb-violet-400);
+--tier-full:var(--hb-magenta-500);
+--tier-full-text:var(--hb-magenta-400);
+--action-play:var(--hb-magenta-500);
+}
