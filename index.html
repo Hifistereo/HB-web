@@ -175,8 +175,8 @@
 
 <section id="sastavi" class="tiers" aria-labelledby="sastavi-h">
   <div class="glow glow-essential" data-glow="essential" aria-hidden="true"></div>
-  <div class="glow glow-live on" data-glow="live" aria-hidden="true"></div>
-  <div class="glow glow-full" data-glow="full" aria-hidden="true"></div>
+  <div class="glow glow-live" data-glow="live" aria-hidden="true"></div>
+  <div class="glow glow-full on" data-glow="full" aria-hidden="true"></div>
   <div class="wrap">
     <div class="sec-label" data-reveal><span class="num">02</span><span class="eyebrow muted">Sastāvi</span></div>
     <div class="tiers-head">
@@ -191,13 +191,13 @@
         <span class="tier-meta">3 mūziķi</span>
         <span class="choose">Ja nepieciešama dzīva mūzika kompaktākam vai elegantākam pasākumam.</span>
       </button>
-      <button type="button" class="tab" role="tab" id="tab-live" aria-selected="true" aria-controls="sastavs-panel" tabindex="0" data-tier="live">
+      <button type="button" class="tab" role="tab" id="tab-live" aria-selected="false" aria-controls="sastavs-panel" tabindex="-1" data-tier="live">
         <span class="bar bg-live" aria-hidden="true"></span>
         <span class="t-name tx-live">Live+</span>
         <span class="tier-meta">4 mūziķi</span>
         <span class="choose">Ja meklējat universālu risinājumu ar pilnvērtīgu grupas skanējumu un labu ballītes enerģiju.</span>
       </button>
-      <button type="button" class="tab" role="tab" id="tab-full" aria-selected="false" aria-controls="sastavs-panel" tabindex="-1" data-tier="full">
+      <button type="button" class="tab" role="tab" id="tab-full" aria-selected="true" aria-controls="sastavs-panel" tabindex="0" data-tier="full">
         <span class="bar bg-full" aria-hidden="true"></span>
         <span class="t-name tx-full">Full Experience</span>
         <span class="tier-meta">5 mūziķi</span>
@@ -205,8 +205,8 @@
       </button>
     </div>
 
-    <div class="panel" id="sastavs-panel" role="tabpanel" aria-labelledby="tab-live" tabindex="0">
-      <div class="bar bg-live" id="panel-bar" aria-hidden="true"></div>
+    <div class="panel" id="sastavs-panel" role="tabpanel" aria-labelledby="tab-full" tabindex="0">
+      <div class="bar bg-full" id="panel-bar" aria-hidden="true"></div>
       <div class="panel-body tier-panel" data-tier="essential">
         <div class="panel-left">
           <div class="big-n-row"><span class="big-n tx-essential">3</span><span class="lbl">mūziķi</span></div>

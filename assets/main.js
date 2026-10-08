@@ -69,7 +69,7 @@
       anim($('.big-n', body), [{ transform: 'translateY(18%)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 620, easing: EASE });
     }
   }
-  selectTier('live');
+  selectTier('full'); // default line-up: Henrix Full Experience
   $$('.tab').forEach(function (t) { t.addEventListener('click', function () { selectTier(t.dataset.tier); }); });
   $('.tablist').addEventListener('keydown', function (e) {
     var i = TIERS.indexOf(cur), ni = null;
@@ -173,7 +173,10 @@
     F('phone').setAttribute('aria-invalid', errors.contact ? 'true' : 'false');
   }
   // as in the original: editing only clears errors that are now fixed, it never adds new ones
+  // a previous result notice (mail fallback / send error) no longer applies once the form changes
+  function clearStatus() { status.textContent = ''; status.classList.remove('info'); }
   form.addEventListener('input', function () {
+    clearStatus();
     if (!Object.keys(errors).length) return;
     var v = validate();
     ['date', 'name', 'contact'].forEach(function (k) { if (!v[k]) delete errors[k]; });
@@ -181,11 +184,11 @@
   });
   form.addEventListener('submit', function (ev) {
     ev.preventDefault();
+    clearStatus();
     var v = validate();
     if (Object.keys(v).length) { errors = v; showErrors(); F(v.date ? 'date' : v.name ? 'name' : 'email').focus(); return; }
     errors = {}; showErrors();
     var endpoint = form.getAttribute('action');
-    status.textContent = ''; status.classList.remove('info');
     if (!endpoint) { mailFallback(); return; }
     var btn = $('button[type=submit]', form); btn.disabled = true;
     var data = new FormData(form);
@@ -217,7 +220,7 @@
     sent.focus({ preventScroll: true });
     anim(sent, [{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 520, easing: EASE });
   }
-  $('#sent-reset').addEventListener('click', function () { form.reset(); errors = {}; showErrors(); status.textContent = ''; sent.hidden = true; form.hidden = false; });
+  $('#sent-reset').addEventListener('click', function () { form.reset(); errors = {}; showErrors(); clearStatus(); sent.hidden = true; form.hidden = false; });
 
   // ---- quote: one span per word (split on plain spaces; "programma&nbsp;—" stays one word) ----
   var quote = $('[data-quote]'), words = [];
