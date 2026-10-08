@@ -5,7 +5,9 @@ Static site for Henrix Band, served by GitHub Pages (Settings → Pages → Sour
 - `index.html`, `assets/` — the site (no build step; interactions and motion port the original component logic 1:1).
 - `_source/` — original Claude Design export, kept for reference. Jekyll skips `_` folders, so it is not published.
 
+## Tests
+`npm ci && npx playwright install chromium && npm test`: HTML validation, plus Playwright on mobile and desktop (privacy and consent, form lifecycle, interactions, accessibility, SEO and structured data, Core Web Vitals budget). CI runs the same suite, and deployment to Pages only happens from `main` after it passes.
+
 ## To finish
-- **Enquiry form**: set `action` on `<form id="enquiry">` in `index.html` to a Formspree / Web3Forms endpoint and add that origin to `connect-src` in the CSP meta tag.
-- **Analytics**: add the script and its origin to the CSP `script-src` / `connect-src`.
+See `SETUP.md` (Web3Forms key, Search Console, Google Business Profile, Cloudflare Web Analytics, video loop, DNS). Audit findings are in `AUDIT.md`.
 - Update `lastmod` in `sitemap.xml` when content changes.

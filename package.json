@@ -1,0 +1,17 @@
+{
+  "name": "henrix-lv",
+  "private": true,
+  "description": "Tests for the static henrix.lv site (not published).",
+  "scripts": {
+    "serve": "python3 -m http.server 4173 --bind 127.0.0.1",
+    "test": "npm run test:html && npm run test:e2e && npm run test:perf",
+    "test:html": "html-validate index.html 404.html privatums.html",
+    "test:e2e": "playwright test --grep-invert @perf",
+    "test:perf": "playwright test --grep @perf --workers=1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.11.3",
+    "@playwright/test": "1.56.1",
+    "html-validate": "10.17.0"
+  }
+}

@@ -113,10 +113,35 @@
   });
 
   // ---- video card ----
-  // Muted background loop starts when the card is on screen (not with reduced motion);
-  // the button toggles sound. Before that, a click starts the video directly with sound.
+  // A muted, self-hosted background loop (data-loop on #vid, base path without extension) plays
+  // while the card is on screen (not with reduced motion or Save-Data). YouTube is third-party
+  // content, so it loads only after a click — then with sound, and the button toggles sound.
   var vid = $('#vid'), vidBtn = $('button', vid);
-  var V = { inView: false, direct: false, sound: false, unmutedOnce: false, frame: null, ready: false, queue: [], ping: 0 };
+  var V = { inView: false, direct: false, sound: false, unmutedOnce: false, frame: null, ready: false, queue: [], ping: 0, loop: null };
+  var conn = navigator.connection;
+  function mountLoop(base) {
+    var v = doc.createElement('video');
+    v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'none';
+    v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true');
+    v.disablePictureInPicture = true; v.tabIndex = -1;
+    var img = $('img', vid); if (img) v.poster = img.currentSrc || img.src;
+    [['webm', 'video/webm'], ['mp4', 'video/mp4']].forEach(function (t) {
+      var s = doc.createElement('source'); s.src = base + '.' + t[0]; s.type = t[1]; v.appendChild(s);
+    });
+    v.addEventListener('playing', function () { v.classList.add('ready'); });
+    // a missing or unplayable clip leaves the poster image in place
+    var srcs = $$('source', v);
+    srcs[srcs.length - 1].addEventListener('error', function () { if (V.loop === v) { v.remove(); V.loop = null; renderVid(); } });
+    V.loop = v;
+    vid.insertBefore(v, $('.scrim', vid));
+    loopPlay(true);
+  }
+  function loopPlay(on) {
+    var v = V.loop; if (!v) return;
+    if (on && v.paused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+    else if (!on && !v.paused) v.pause();
+  }
+  function dropLoop() { var v = V.loop; V.loop = null; if (v) setTimeout(function () { v.remove(); }, 900); }
   var YT_ORIGIN = 'https://www.youtube-nocookie.com';
   var YT = 'https://www.youtube-nocookie.com/embed/CZxHxjbiefg?autoplay=1&{m}loop=1&playlist=CZxHxjbiefg&controls=0&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&enablejsapi=1';
   function mountFrame(muted) {
@@ -126,7 +151,7 @@
     f.tabIndex = -1;
     f.src = YT.replace('{m}', muted ? 'mute=1&' : '');
     f.addEventListener('load', function () {
-      setTimeout(function () { f.classList.add('ready'); }, 400);
+      setTimeout(function () { f.classList.add('ready'); dropLoop(); }, 400);
       // IFrame API handshake: announce we're listening until the player reports onReady
       var tries = 0;
       clearInterval(V.ping);
@@ -157,7 +182,7 @@
   function renderVid() {
     vid.classList.toggle('sound', V.sound);
     $('.disc', vid).innerHTML = V.sound ? '<span class="pause"><span></span><span></span></span>' : '<span class="tri"></span>';
-    $('.hint', vid).textContent = V.sound ? 'Izslēgt skaņu' : (V.inView || V.direct ? 'Ieslēgt skaņu' : 'Atskaņot');
+    $('.hint', vid).textContent = V.sound ? 'Izslēgt skaņu' : (V.loop || V.frame ? 'Ieslēgt skaņu' : 'Atskaņot');
     vidBtn.setAttribute('aria-label', V.sound ? 'Izslēgt video skaņu' : 'Atskaņot Henrix Band video ar skaņu');
     vidBtn.setAttribute('aria-pressed', V.sound ? 'true' : 'false');
   }
@@ -167,7 +192,7 @@
   vidBtn.addEventListener('focus', function () { hover(true); });
   vidBtn.addEventListener('blur', function () { hover(false); });
   vidBtn.addEventListener('click', function () {
-    if (!V.inView && !V.direct) { V.direct = true; V.sound = true; mountFrame(false); renderVid(); return; }
+    if (!V.frame) { V.direct = true; V.sound = true; loopPlay(false); mountFrame(false); renderVid(); return; }
     if (V.sound) { yt('mute'); V.sound = false; }
     else {
       if (!V.unmutedOnce) { yt('seekTo', [0, true]); V.unmutedOnce = true; }
@@ -210,13 +235,18 @@
     var v = validate();
     if (Object.keys(v).length) { errors = v; showErrors(); F(v.date ? 'date' : v.name ? 'name' : 'email').focus(); return; }
     errors = {}; showErrors();
-    var endpoint = form.getAttribute('action');
-    if (!endpoint) { mailFallback(); return; }
+    // Web3Forms: until an access key is set, hand the enquiry to the visitor's mail app
+    var endpoint = form.getAttribute('action'), key = F('access_key').value.trim();
+    if (!endpoint || !key) { mailFallback(); return; }
+    // honeypot filled: a bot — show the normal confirmation, send nothing
+    if (F('botcheck').value) { onSent(); return; }
     var btn = $('button[type=submit]', form); btn.disabled = true;
     var data = new FormData(form);
-    data.append('_subject', 'Henrix Band pieprasījums — ' + F('date').value);
+    data.delete('botcheck');
+    data.append('subject', 'Henrix Band pieprasījums — ' + F('date').value);
+    data.append('from_name', 'henrix.lv');
     fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
-      .then(function (r) { if (!r.ok) throw new Error(r.status); onSent(); })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok || !j.success) throw new Error(r.status); onSent(); }); })
       .catch(function () { status.textContent = 'Neizdevās nosūtīt. Lūdzu, mēģiniet vēlreiz vai sazinieties ar mums tieši.'; })
       .then(function () { btn.disabled = false; });
   });
@@ -303,10 +333,13 @@
       active = a;
       navLinks.forEach(function (l) { if (l.getAttribute('href') === '#' + a) l.setAttribute('aria-current', 'true'); else l.removeAttribute('aria-current'); });
     }
-    if (!V.inView && !V.direct && !reduced()) {
-      var r = vid.getBoundingClientRect();
-      if (r.top < vh && r.bottom > 0) { V.inView = true; mountFrame(true); renderVid(); }
+    var vr = vid.getBoundingClientRect(), vidVis = vr.top < vh && vr.bottom > 0;
+    if (!V.inView && !V.direct && !reduced() && vidVis) {
+      V.inView = true;
+      if (vid.dataset.loop && !(conn && conn.saveData)) mountLoop(vid.dataset.loop);
+      renderVid();
     }
+    if (V.loop && !V.direct) loopPlay(vidVis && !reduced());
     if (reduced()) return;
     px.forEach(function (el) {
       var f = parseFloat(el.dataset.parallax), box = el.parentElement.getBoundingClientRect();

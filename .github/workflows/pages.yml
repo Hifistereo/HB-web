@@ -1,36 +1,73 @@
-name: Deploy site to GitHub Pages
+name: Test and deploy site to GitHub Pages
 
+# Every push and pull request runs the test suite. Deployment happens only from main,
+# and only after the test job has passed (needs: test) — a failing test blocks the release.
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: pages-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: HTML validation
+        run: npm run test:html
+      - name: Browser tests (privacy, form, interactions, accessibility, SEO, structured data)
+        run: npm run test:e2e
+      - name: Core Web Vitals budget (isolated, one worker)
+        run: npm run test:perf
+      - if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: playwright-results
+          path: test-results
+          retention-days: 7
+
+  deploy:
+    needs: test
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Collect published files (design source and repo docs stay private)
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - name: Collect published files (design source, tests and repo docs stay private)
         run: |
           mkdir _site
           rsync -a --exclude '.git' --exclude '.github' --exclude '_source' --exclude '_site' \
-            --exclude 'README.md' --exclude '_config.yml' ./ _site/
+            --exclude 'README.md' --exclude 'AUDIT.md' --exclude 'SETUP.md' --exclude '_config.yml' \
+            --exclude 'node_modules' --exclude 'tests' --exclude 'test-results' --exclude 'playwright-report' \
+            --exclude 'package.json' --exclude 'package-lock.json' --exclude 'playwright.config.js' \
+            --exclude '.htmlvalidate.json' --exclude '.gitignore' ./ _site/
           ls -la _site
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
         with:
           path: _site
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
