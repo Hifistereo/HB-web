@@ -306,6 +306,7 @@ textarea.f-in{min-height:96px;resize:vertical}
 .f-foot .btn[disabled]{opacity:.6;cursor:wait}
 .f-status{font:400 15px/1.5 var(--font-body);color:var(--magenta-400);margin-top:calc(-1 * clamp(28px,3vw,40px) + 12px)}
 .f-status:empty{display:none}
+.f-status.info{color:var(--ink-100)}
 .sent{margin-top:clamp(40px,5vw,64px);position:relative;background:var(--ink-800);padding:clamp(28px,4vw,56px);display:flex;flex-direction:column;gap:18px;outline:none}
 .sent .bar{position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,#3DC6D9 0%,#6A4FF6 40%,#9B4FE0 70%,#D941C8 100%)}
 .sent .big{font:600 clamp(32px,3.6vw,52px)/1 var(--font-display);text-transform:uppercase;color:var(--ink-50)}
