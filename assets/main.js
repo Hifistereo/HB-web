@@ -185,8 +185,8 @@
     if (Object.keys(v).length) { errors = v; showErrors(); F(v.date ? 'date' : v.name ? 'name' : 'email').focus(); return; }
     errors = {}; showErrors();
     var endpoint = form.getAttribute('action');
-    status.textContent = '';
-    if (!endpoint) { status.textContent = 'Pieteikuma forma vēl nav pieslēgta. Lūdzu, sazinieties ar mums tieši.'; return; }
+    status.textContent = ''; status.classList.remove('info');
+    if (!endpoint) { mailFallback(); return; }
     var btn = $('button[type=submit]', form); btn.disabled = true;
     var data = new FormData(form);
     data.append('_subject', 'Henrix Band pieprasījums — ' + F('date').value);
@@ -195,6 +195,20 @@
       .catch(function () { status.textContent = 'Neizdevās nosūtīt. Lūdzu, mēģiniet vēlreiz vai sazinieties ar mums tieši.'; })
       .then(function () { btn.disabled = false; });
   });
+  // no form service connected yet: hand the enquiry to the visitor's mail app
+  function mailFallback() {
+    var v = function (n) { var el = F(n); return el && el.value ? el.value.trim() : ''; };
+    var tier = $('input[name=tier]:checked', form);
+    var d = v('date') ? v('date').split('-').reverse().join('.') : '';
+    var lines = [
+      'Pasākuma datums: ' + d, 'Norises vieta: ' + v('place'), 'Viesu skaits: ' + v('guests'),
+      'Vakara formāts: ' + v('format'), 'Sastāvs: ' + (tier ? tier.value : ''), '',
+      'Vārds: ' + v('name'), 'E-pasts: ' + v('email'), 'Tālrunis: ' + v('phone')
+    ];
+    window.location.href = 'mailto:henrixband@gmail.com?subject=' + encodeURIComponent('Pieprasījums — ' + d) + '&body=' + encodeURIComponent(lines.join('\n'));
+    status.classList.add('info');
+    status.textContent = 'Atvērām e-pasta vēstuli ar jūsu pieprasījumu — atliek nospiest “Sūtīt”. Ja tā neatvērās, rakstiet uz henrixband@gmail.com vai zvaniet +371 25 972 689.';
+  }
   function onSent() {
     var first = F('name').value.trim().split(' ')[0] || '', d = F('date').value;
     $('#sent-name').textContent = ', ' + first;
