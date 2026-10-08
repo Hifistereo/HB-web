@@ -113,7 +113,7 @@
   });
 
   // ---- video card ----
-  // Muted background loop starts when the card nears the viewport (not with reduced motion);
+  // Muted background loop starts when the card is on screen (not with reduced motion);
   // the button toggles sound. Before that, a click starts the video directly with sound.
   var vid = $('#vid'), vidBtn = $('button', vid);
   var V = { inView: false, direct: false, sound: false, unmutedOnce: false, frame: null };
@@ -283,7 +283,7 @@
     }
     if (!V.inView && !V.direct && !reduced()) {
       var r = vid.getBoundingClientRect();
-      if (r.top < vh + 300 && r.bottom > -300) { V.inView = true; mountFrame(true); renderVid(); }
+      if (r.top < vh && r.bottom > 0) { V.inView = true; mountFrame(true); renderVid(); }
     }
     if (reduced()) return;
     px.forEach(function (el) {
