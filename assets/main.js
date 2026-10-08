@@ -116,7 +116,8 @@
   // Muted background loop starts when the card is on screen (not with reduced motion);
   // the button toggles sound. Before that, a click starts the video directly with sound.
   var vid = $('#vid'), vidBtn = $('button', vid);
-  var V = { inView: false, direct: false, sound: false, unmutedOnce: false, frame: null };
+  var V = { inView: false, direct: false, sound: false, unmutedOnce: false, frame: null, ready: false, queue: [], ping: 0 };
+  var YT_ORIGIN = 'https://www.youtube-nocookie.com';
   var YT = 'https://www.youtube-nocookie.com/embed/CZxHxjbiefg?autoplay=1&{m}loop=1&playlist=CZxHxjbiefg&controls=0&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&enablejsapi=1';
   function mountFrame(muted) {
     var f = doc.createElement('iframe');
@@ -124,14 +125,35 @@
     f.allow = 'autoplay; encrypted-media; picture-in-picture';
     f.tabIndex = -1;
     f.src = YT.replace('{m}', muted ? 'mute=1&' : '');
-    f.addEventListener('load', function () { setTimeout(function () { f.classList.add('ready'); }, 400); });
+    f.addEventListener('load', function () {
+      setTimeout(function () { f.classList.add('ready'); }, 400);
+      // IFrame API handshake: announce we're listening until the player reports onReady
+      var tries = 0;
+      clearInterval(V.ping);
+      V.ping = setInterval(function () {
+        if (V.ready || ++tries > 60) { clearInterval(V.ping); return; }
+        post({ event: 'listening', id: 1, channel: 'widget' });
+      }, 250);
+    });
+    V.frame = f; V.ready = false; V.queue = [];
     vid.insertBefore(f, $('.scrim', vid));
-    V.frame = f;
   }
+  function post(msg) {
+    var f = V.frame; if (f && f.contentWindow) f.contentWindow.postMessage(JSON.stringify(msg), YT_ORIGIN);
+  }
+  // commands sent before onReady are dropped by the player, so hold them until it is ready
   function yt(func, args) {
-    var f = V.frame; if (!f || !f.contentWindow) return;
-    f.contentWindow.postMessage(JSON.stringify({ event: 'command', func: func, args: args || [] }), '*');
+    var msg = { event: 'command', func: func, args: args || [] };
+    if (V.ready) post(msg); else V.queue.push(msg);
   }
+  window.addEventListener('message', function (e) {
+    if (e.origin !== YT_ORIGIN || !V.frame || e.source !== V.frame.contentWindow) return;
+    var d; try { d = typeof e.data === 'string' ? JSON.parse(e.data) : e.data; } catch (err) { return; }
+    if (!d || V.ready || (d.event !== 'onReady' && d.event !== 'initialDelivery' && d.event !== 'infoDelivery')) return;
+    V.ready = true; clearInterval(V.ping);
+    var q = V.queue; V.queue = [];
+    q.forEach(post);
+  });
   function renderVid() {
     vid.classList.toggle('sound', V.sound);
     $('.disc', vid).innerHTML = V.sound ? '<span class="pause"><span></span><span></span></span>' : '<span class="tri"></span>';
