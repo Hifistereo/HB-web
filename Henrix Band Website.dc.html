@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Henrix Band — dzīvā mūzika korporatīvajiem pasākumiem</title>
+<link rel="stylesheet" href="_ds/henrix-band-design-system-120eaffc-4189-4268-a46c-a01c32ad6212/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/henrix-band-design-system-120eaffc-4189-4268-a46c-a01c32ad6212/tokens/colors.css">
+<link rel="stylesheet" href="_ds/henrix-band-design-system-120eaffc-4189-4268-a46c-a01c32ad6212/tokens/typography.css">
+<link rel="stylesheet" href="_ds/henrix-band-design-system-120eaffc-4189-4268-a46c-a01c32ad6212/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/henrix-band-design-system-120eaffc-4189-4268-a46c-a01c32ad6212/tokens/base.css">
+<link rel="stylesheet" href="_ds/henrix-band-design-system-120eaffc-4189-4268-a46c-a01c32ad6212/styles.css">
+<link rel="preload" as="image" href="assets/singer-live.jpg">
+<script src="_ds/henrix-band-design-system-120eaffc-4189-4268-a46c-a01c32ad6212/_ds_bundle.js"></script>
+<style>
+html,body{margin:0;background:#0A0A14;overflow-x:clip}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+*,*::before,*::after{box-sizing:border-box}
+a{color:#3DC6D9;text-underline-offset:3px}
+a:hover{color:#5ACFDF}
+::selection{background:#6A4FF6;color:#fff}
+:focus-visible{outline:2px solid #3DC6D9;outline-offset:3px}
+input,select,button{font:inherit}
+input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.8)}
+</style>
+</helmet>
+<div ref="{{ rootRef }}" lang="lv" style="--fs-eyebrow:12px;--fs-body:17px;--fs-small:14px;--fs-h4:26px;background:#0A0A14;color:#B9B8C8;font-family:var(--font-body);font-weight:300;min-height:100vh;position:relative">
+
+<a href="#saturs" style="position:absolute;left:16px;top:-60px;z-index:100;background:#3DC6D9;color:#0A0A14;padding:12px 18px;font:700 14px var(--font-body);text-decoration:none" style-focus="top:12px">Pāriet uz saturu</a>
+
+<header style="position:fixed;top:0;left:0;right:0;z-index:50;background:{{ navBg }};border-bottom:1px solid {{ navLine }};transition:background 220ms cubic-bezier(.22,.61,.36,1),border-color 220ms cubic-bezier(.22,.61,.36,1)">
+  <div style="max-width:1440px;margin:0 auto;padding:0 clamp(20px,5vw,72px);height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <a href="#top" aria-label="Henrix Band — uz sākumu" onClick="{{ closeMenu }}" style="text-decoration:none;display:flex;white-space:nowrap;flex:none">
+      <x-import component-from-global-scope="HenrixBandDesignSystem_120eaf.Wordmark" size="{{ 26 }}" stacked="{{ false }}" hint-size="150px,26px"></x-import>
+    </a>
+    <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+      <nav aria-label="Galvenā navigācija" style="display:flex;align-items:center;gap:clamp(20px,2.6vw,40px)">
+        <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="5">
+          <a href="{{ n.href }}" aria-current="{{ n.current }}" style="position:relative;font:500 13px/1 var(--font-body);letter-spacing:.16em;text-transform:uppercase;text-decoration:none;white-space:nowrap;color:{{ n.color }};padding:10px 0;transition:color 220ms cubic-bezier(.22,.61,.36,1)" style-hover="color:#F2F1F8">{{ n.label }}<span aria-hidden="true" style="position:absolute;left:0;right:0;bottom:2px;height:2px;background:#3DC6D9;transform-origin:left;transform:scaleX({{ n.bar }});transition:transform 420ms cubic-bezier(.22,.61,.36,1)"></span></a>
+        </sc-for>
+        <a href="#pieteikt" style="font:700 13px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;white-space:nowrap;color:#0A0A14;background:#3DC6D9;padding:14px 20px;transition:background 220ms cubic-bezier(.22,.61,.36,1)" style-hover="background:#F2F1F8;color:#0A0A14">Pārbaudīt datumu</a>
+      </nav>
+    </sc-if>
+    <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+      <button type="button" onClick="{{ toggleMenu }}" aria-expanded="{{ menuExpanded }}" aria-controls="mob-menu" style="background:transparent;border:1px solid #3A3950;color:#F2F1F8;height:44px;padding:0 16px;display:flex;align-items:center;gap:10px;font:700 12px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;cursor:pointer">
+        <span>{{ menuLabel }}</span>
+        <span aria-hidden="true" style="display:flex;flex-direction:column;gap:5px;width:18px">
+          <span style="height:1.5px;background:#F2F1F8;transition:transform 220ms cubic-bezier(.22,.61,.36,1);transform:{{ burgerTop }}"></span>
+          <span style="height:1.5px;background:#F2F1F8;transition:transform 220ms cubic-bezier(.22,.61,.36,1);transform:{{ burgerBot }}"></span>
+        </span>
+      </button>
+    </sc-if>
+  </div>
+</header>
+
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div id="mob-menu" role="dialog" aria-modal="true" aria-label="Izvēlne" style="position:fixed;inset:0;z-index:45;background:#06060E;padding:112px clamp(20px,5vw,72px) 40px;display:flex;flex-direction:column;justify-content:space-between;overflow:auto">
+    <nav aria-label="Mobilā navigācija" style="display:flex;flex-direction:column">
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="5">
+        <a href="{{ n.href }}" onClick="{{ closeMenu }}" data-menu-item="1" style="display:flex;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid #2F2E40;text-decoration:none;color:#F2F1F8;font:600 44px/1 var(--font-display);text-transform:uppercase">
+          <span style="font:500 15px/1 var(--font-display);color:#3DC6D9;width:24px">{{ n.num }}</span>{{ n.label }}
+        </a>
+      </sc-for>
+    </nav>
+    <a href="#pieteikt" onClick="{{ closeMenu }}" style="margin-top:40px;display:flex;justify-content:center;align-items:center;min-height:56px;background:#3DC6D9;color:#0A0A14;text-decoration:none;font:700 14px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase">Pārbaudīt datumu</a>
+  </div>
+</sc-if>
+
+<main id="saturs">
+
+<section id="top" aria-label="Henrix Band" onPointerMove="{{ onHeroMove }}" onPointerLeave="{{ onHeroLeave }}" style="position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;isolation:isolate">
+  <div aria-hidden="true" style="position:absolute;inset:0;z-index:-2;overflow:hidden">
+    <div data-parallax="0.18" data-parallax-mode="top" style="position:absolute;left:0;right:0;top:0;height:112%;will-change:transform">
+      <sc-if value="{{ heroSinger }}" hint-placeholder-val="{{ true }}"><img data-hero-img="1" src="assets/singer-live.jpg" alt="" fetchpriority="high" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:60% 22%;display:block"></sc-if>
+      <sc-if value="{{ heroBand }}" hint-placeholder-val="{{ false }}"><img data-hero-img="1" src="assets/band-stage.jpg" alt="" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:center 35%;display:block"></sc-if>
+    </div>
+  </div>
+  <div aria-hidden="true" style="position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(10,10,20,.55) 0%,rgba(10,10,20,0) 22%,rgba(10,10,20,.2) 48%,rgba(10,10,20,.88) 78%,#0A0A14 100%),linear-gradient(90deg,rgba(10,10,20,.7) 0%,rgba(10,10,20,0) 60%)"></div>
+  <div ref="{{ lightRef }}" aria-hidden="true" style="position:absolute;left:0;top:0;width:900px;height:900px;margin:-450px 0 0 -450px;z-index:-1;pointer-events:none;border-radius:50%;background:radial-gradient(circle,rgba(61,198,217,.22) 0%,rgba(106,79,246,.12) 35%,rgba(10,10,20,0) 65%);mix-blend-mode:screen;opacity:0;transition:opacity 700ms cubic-bezier(.22,.61,.36,1),transform 900ms cubic-bezier(.22,.61,.36,1)"></div>
+
+  <div style="max-width:1440px;width:100%;margin:0 auto;padding:140px clamp(20px,5vw,72px) 0">
+    <div data-hero-fade="1" style="display:flex;align-items:center;gap:16px;margin-bottom:clamp(20px,3vw,32px)">
+      <span aria-hidden="true" style="width:48px;height:2px;background:linear-gradient(90deg,#E06ACF 0%,#3DC6D9 100%)"></span>
+      <x-import component-from-global-scope="HenrixBandDesignSystem_120eaf.Eyebrow" tone="heading" hint-size="320px,16px">Dzīvā mūzika korporatīvajiem pasākumiem</x-import>
+    </div>
+    <h1 style="margin:0;font:600 clamp(68px,13vw,212px)/.84 var(--font-display);text-transform:uppercase;letter-spacing:.005em;color:#F2F1F8">
+      <span style="display:block;overflow:hidden;padding-top:.1em;margin-top:-.1em"><span data-hero-line="1" style="display:block">Dzīvā mūzika.</span></span>
+      <span style="display:block;overflow:hidden;padding-top:.1em;margin-top:-.04em"><span data-hero-line="1" style="display:block;color:#3DC6D9">Īsta ballīte.</span></span>
+    </h1>
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:28px 48px;margin-top:clamp(28px,4vw,48px)">
+      <p data-hero-fade="1" style="margin:0;max-width:440px;font:400 clamp(17px,1.4vw,19px)/1.6 var(--font-body);color:#DCDBE6;text-wrap:pretty">Dzīvā mūzika uzņēmumu ballēm, jubilejām, gada noslēguma svinībām un klientu vakariem. 3–5 mūziķi, pazīstamas dziesmas, pilns deju laukums.</p>
+      <div data-hero-fade="1" style="display:flex;flex-wrap:wrap;gap:12px">
+        <a href="#pieteikt" style="display:inline-flex;align-items:center;min-height:52px;padding:0 26px;background:#3DC6D9;color:#0A0A14;text-decoration:none;font:700 14px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;transition:background 220ms cubic-bezier(.22,.61,.36,1)" style-hover="background:#F2F1F8;color:#0A0A14">Pārbaudīt datumu</a>
+        <a href="#sastavi" style="display:inline-flex;align-items:center;min-height:52px;padding:0 26px;border:1px solid #3A3950;color:#F2F1F8;text-decoration:none;font:700 14px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;transition:border-color 220ms cubic-bezier(.22,.61,.36,1),background 220ms cubic-bezier(.22,.61,.36,1)" style-hover="border-color:#F2F1F8;color:#F2F1F8;background:rgba(242,241,248,.06)">Sastāvi un cenas</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:1440px;width:100%;margin:clamp(48px,7vw,88px) auto 0;padding:0 clamp(20px,5vw,72px) clamp(20px,3vw,32px)">
+    <div data-hero-fade="1" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(8px,1.2vw,16px)">
+      <sc-for list="{{ tiers }}" as="t" hint-placeholder-count="3">
+        <button type="button" onClick="{{ t.onJump }}" aria-label="{{ t.jumpLabel }}" style="text-align:left;background:transparent;border:0;border-top:3px solid {{ t.color }};padding:14px 0 4px;color:#F2F1F8;cursor:pointer;display:flex;flex-direction:column;gap:6px;transition:opacity 220ms cubic-bezier(.22,.61,.36,1)" style-hover="opacity:.78">
+          <span style="font:600 clamp(18px,2vw,26px)/1 var(--font-display);text-transform:uppercase;color:{{ t.text }}">{{ t.short }}</span>
+          <span style="font:400 clamp(13px,1.1vw,15px)/1.3 var(--font-body);color:#B9B8C8">{{ t.stripMeta }}</span>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="par-mums" aria-labelledby="par-mums-h" style="padding:clamp(96px,13vw,184px) 0 0;scroll-margin-top:72px">
+  <div style="max-width:1440px;margin:0 auto;padding:0 clamp(20px,5vw,72px)">
+    <div data-reveal="1" style="display:flex;gap:14px;align-items:baseline;margin-bottom:clamp(28px,3vw,40px)">
+      <span style="font:500 15px/1 var(--font-display);color:#3DC6D9">01</span>
+      <x-import component-from-global-scope="HenrixBandDesignSystem_120eaf.Eyebrow" tone="muted" hint-size="100px,16px">Par mums</x-import>
+    </div>
+    <h2 id="par-mums-h" data-quote="1" style="margin:0;max-width:1180px;font:500 clamp(34px,4.8vw,72px)/1.06 var(--font-display);text-transform:uppercase;color:#F2F1F8;text-wrap:balance">
+      <sc-for list="{{ quoteWords }}" as="w" hint-placeholder-count="20"><span data-word="1" style="transition:opacity 260ms linear;color:{{ w.color }}">{{ w.t }}</span></sc-for>
+    </h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(24px,3vw,48px);margin:clamp(48px,6vw,80px) 0 0 auto;max-width:800px;font:300 17px/1.75 var(--font-body);color:#B9B8C8">
+      <p data-reveal="1" style="margin:0;text-wrap:pretty"><strong>Henrix Band</strong> piedāvā dzīvo mūziku uzņēmumu ballēm, korporatīvajiem pasākumiem, jubilejām, gada noslēguma svinībām, klientu vakariem un citiem īpašiem notikumiem.</p>
+      <p data-reveal="1" data-reveal-delay="90" style="margin:0;text-wrap:pretty">Mūsu mērķis ir vienkāršs — radīt īstu ballīti. Spēlējam pazīstamas latviešu un ārzemju dziesmas, kurām var dziedāt līdzi, dejot un kuras labi strādā dažādām auditorijām.</p>
+    </div>
+  </div>
+
+  <figure style="margin:clamp(72px,9vw,128px) 0 0;position:relative;height:clamp(460px,64vw,880px);overflow:hidden;isolation:isolate">
+    <div data-parallax="0.12" style="position:absolute;left:0;right:0;top:-10%;height:120%;z-index:-2;will-change:transform">
+      <img src="assets/band-stage.jpg" alt="Henrix Band pilnajā sastāvā uz skatuves: vokāls ar akustisko ģitāru, elektriskā ģitāra, basģitāra un taustiņi zilās gaismās" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:center 40%;display:block">
+    </div>
+    <div aria-hidden="true" style="position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#0A0A14 0%,rgba(10,10,20,0) 24%,rgba(10,10,20,0) 52%,rgba(10,10,20,.82) 84%,#0A0A14 100%)"></div>
+    <figcaption style="position:absolute;left:0;right:0;bottom:0;max-width:1440px;margin:0 auto;padding:0 clamp(20px,5vw,72px) clamp(24px,4vw,56px);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px 56px">
+      <div data-reveal="1" style="display:flex;flex-direction:column;gap:12px;max-width:520px">
+        <x-import component-from-global-scope="HenrixBandDesignSystem_120eaf.Eyebrow" tone="full" hint-size="240px,16px">Henrix Full Experience · 5 mūziķi</x-import>
+        <span style="font:400 17px/1.6 var(--font-body);color:#F2F1F8">vokāls / akustiskā ģitāra • elektriskā ģitāra • basģitāra • taustiņi • bungas</span>
+      </div>
+      <div data-reveal="1" data-reveal-delay="90" style="display:flex;flex-direction:column;gap:16px;max-width:420px">
+        <p style="margin:0;font:400 17px/1.6 var(--font-body);color:#DCDBE6;text-wrap:pretty">Atkarībā no pasākuma formāta, viesu skaita un vēlamās atmosfēras piedāvājam trīs Henrix Band sastāvus.</p>
+        <a href="#sastavi" style="align-self:flex-start;font:700 13px/1 var(--font-body);letter-spacing:.16em;text-transform:uppercase;color:#3DC6D9;text-decoration:none;padding:10px 0;border-bottom:1px solid #3DC6D9" style-hover="color:#F2F1F8;border-color:#F2F1F8">Salīdzināt sastāvus</a>
+      </div>
+    </figcaption>
+  </figure>
+</section>
+
+<section id="sastavi" aria-labelledby="sastavi-h" style="position:relative;padding:clamp(96px,12vw,168px) 0;scroll-margin-top:72px;overflow:hidden;isolation:isolate">
+  <sc-for list="{{ tiers }}" as="t" hint-placeholder-count="3">
+    <div aria-hidden="true" style="position:absolute;left:-10%;top:-10%;width:120%;height:80%;z-index:-1;pointer-events:none;background:radial-gradient(50% 50% at 30% 40%,{{ t.glow }} 0%,rgba(10,10,20,0) 70%);opacity:{{ t.glowOp }};transition:opacity 700ms cubic-bezier(.22,.61,.36,1)"></div>
+  </sc-for>
+  <div style="max-width:1440px;margin:0 auto;padding:0 clamp(20px,5vw,72px)">
+    <div data-reveal="1" style="display:flex;gap:14px;align-items:baseline;margin-bottom:20px">
+      <span style="font:500 15px/1 var(--font-display);color:#3DC6D9">02</span>
+      <x-import component-from-global-scope="HenrixBandDesignSystem_120eaf.Eyebrow" tone="muted" hint-size="100px,16px">Sastāvi</x-import>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px 40px;margin-bottom:clamp(36px,5vw,64px)">
+      <h2 id="sastavi-h" data-reveal="1" style="margin:0;font:600 clamp(48px,7.4vw,112px)/.9 var(--font-display);text-transform:uppercase;color:#F2F1F8">Kuru sastāvu<br>izvēlēties?</h2>
+      <p data-reveal="1" style="margin:0;font:400 14px/1.4 var(--font-body);letter-spacing:.16em;text-transform:uppercase;color:#9C9BAE">Cenas pēc pieprasījuma</p>
+    </div>
+
+    <div role="tablist" aria-label="Henrix Band sastāvi" onKeyDown="{{ onTabKey }}" data-reveal="1" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(6px,1vw,12px)">
+      <sc-for list="{{ tiers }}" as="t" hint-placeholder-count="3">
+        <button type="button" role="tab" id="{{ t.tabId }}" aria-selected="{{ t.ariaSel }}" aria-controls="sastavs-panel" tabindex="{{ t.tabIndex }}" onClick="{{ t.onSelect }}" style="position:relative;text-align:left;border:0;cursor:pointer;padding:clamp(16px,2vw,24px) clamp(14px,2vw,24px) clamp(18px,2vw,26px);background:{{ t.tabBg }};color:#F2F1F8;display:flex;flex-direction:column;gap:10px;min-height:44px;transition:background 220ms cubic-bezier(.22,.61,.36,1)" style-hover="background:#1C1D36">
+          <span aria-hidden="true" style="position:absolute;left:0;right:0;top:0;height:3px;background:{{ t.color }};opacity:{{ t.barOp }};transition:opacity 220ms cubic-bezier(.22,.61,.36,1)"></span>
+          <span style="font:600 clamp(20px,2.4vw,32px)/1 var(--font-display);text-transform:uppercase;color:{{ t.text }}">{{ t.short }}</span>
+          <span style="font:400 clamp(13px,1.1vw,15px)/1.3 var(--font-body);color:#B9B8C8">{{ t.stripMeta }}</span>
+          <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><span style="font:300 15px/1.6 var(--font-body);color:#9C9BAE;text-wrap:pretty">{{ t.choose }}</span></sc-if>
+        </button>
+      </sc-for>
+    </div>
+
+    <div id="sastavs-panel" role="tabpanel" aria-labelledby="{{ cur.tabId }}" tabindex="0" style="position:relative;margin-top:clamp(6px,1vw,12px);background:#131429;outline-offset:-2px">
+      <div aria-hidden="true" style="position:absolute;left:0;right:0;top:0;height:3px;background:{{ cur.color }};transition:background 420ms cubic-bezier(.22,.61,.36,1)"></div>
+      <div ref="{{ panelRef }}" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(32px,5vw,80px);padding:clamp(32px,5vw,72px) clamp(20px,4vw,64px) clamp(36px,5vw,72px)">
+        <div style="display:flex;flex-direction:column;justify-content:space-between;gap:32px">
+          <div style="display:flex;align-items:flex-end;gap:20px">
+            <span data-big-n="1" style="font:600 clamp(150px,20vw,300px)/.78 var(--font-display);color:{{ cur.text }};letter-spacing:-.01em">{{ cur.n }}</span>
+            <span style="font:600 clamp(22px,2.4vw,32px)/1 var(--font-display);text-transform:uppercase;color:#F2F1F8;padding-bottom:.2em">mūziķi</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid #2F2E40;padding-top:24px">
+            <span style="font:500 13px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:#9C9BAE">Cena</span>
+            <span style="font:600 clamp(28px,2.8vw,40px)/1 var(--font-display);text-transform:uppercase;color:#F2F1F8">Pēc pieprasījuma</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:18px;font:300 17px/1.75 var(--font-body);color:#B9B8C8">
+          <x-import component-from-global-scope="HenrixBandDesignSystem_120eaf.Eyebrow" tone="{{ cur.id }}" hint-size="260px,16px">{{ cur.meta }}</x-import>
+          <h3 style="margin:-4px 0 6px;font:600 clamp(36px,4vw,56px)/.95 var(--font-display);text-transform:uppercase;color:#F2F1F8">{{ cur.name }}</h3>
+          <sc-for list="{{ cur.paras }}" as="p" hint-placeholder-count="3">
+            <p style="margin:0;text-wrap:pretty"><sc-if value="{{ p.lead }}" hint-placeholder-val="{{ false }}"><strong>{{ p.lead }} </strong></sc-if>{{ p.text }}</p>
+          </sc-for>
+          <p style="margin:0;text-wrap:pretty"><strong>Piemērots:</strong> {{ cur.fit }}</p>
+          <p style="margin:6px 0 0;padding-top:18px;border-top:1px solid #2F2E40;font:700 17px/1.5 var(--font-body);color:#FFFFFF;text-wrap:pretty">{{ cur.verdict }}</p>
+          <div style="margin-top:12px">
+            <button type="button" onClick="{{ bookCurrent }}" style="display:inline-flex;align-items:center;min-height:52px;padding:0 26px;background:{{ cur.text }};color:#0A0A14;border:0;cursor:pointer;font:700 14px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;transition:background 220ms cubic-bezier(.22,.61,.36,1)" style-hover="background:#F2F1F8">{{ cur.cta }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="programma" aria-labelledby="programma-h" style="padding:clamp(48px,6vw,88px) 0 clamp(96px,12vw,168px);scroll-margin-top:72px">
+  <div style="max-width:1440px;margin:0 auto;padding:0 clamp(20px,5vw,72px)">
+    <div data-reveal="1" style="display:flex;gap:14px;align-items:baseline;margin-bottom:20px">
+      <span style="font:500 15px/1 var(--font-display);color:#3DC6D9">03</span>
+      <x-import component-from-global-scope="HenrixBandDesignSystem_120eaf.Eyebrow" tone="muted" hint-size="100px,16px">Programma</x-import>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(32px,6vw,96px);align-items:end">
+      <div data-reveal="1">
+        <h2 id="programma-h" style="margin:0 0 12px;font:500 14px/1.4 var(--font-body);letter-spacing:.16em;text-transform:uppercase;color:#9C9BAE">Standarta muzikālā programma</h2>
+        <div style="display:flex;align-items:baseline;gap:.12em;font:600 clamp(108px,15vw,232px)/.82 var(--font-display);color:#F2F1F8;white-space:nowrap">3 × 50<span style="font-size:.3em;color:#3DC6D9;text-transform:uppercase">min</span></div>
+      </div>
+      <div data-reveal="1" data-reveal-delay="90" style="display:flex;flex-direction:column;gap:22px;font:300 17px/1.75 var(--font-body);color:#B9B8C8;max-width:520px">
+        <p style="margin:0;text-wrap:pretty">Atkarībā no pasākuma scenārija programmu iespējams sadalīt arī <strong>4 īsākos setos</strong>, pielāgojot uzstāšanos vakara norisei.</p>
+        <div role="group" aria-label="Programmas sadalījums" style="display:inline-grid;grid-template-columns:1fr 1fr;border:1px solid #3A3950;align-self:flex-start">
+          <sc-for list="{{ setOpts }}" as="o" hint-placeholder-count="2">
+            <button type="button" aria-pressed="{{ o.pressed }}" onClick="{{ o.onPick }}" style="min-height:48px;padding:0 22px;border:0;background:{{ o.bg }};color:{{ o.color }};cursor:pointer;font:700 13px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;transition:background 220ms cubic-bezier(.22,.61,.36,1),color 220ms cubic-bezier(.22,.61,.36,1)">{{ o.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div data-reveal="1" style="margin-top:clamp(40px,5vw,64px)" aria-label="{{ timelineLabel }}" role="img">
+      <div style="display:flex;height:clamp(88px,9vw,120px)">
+        <sc-for list="{{ segs }}" as="s" hint-placeholder-count="4">
+          <div style="flex-grow:{{ s.grow }};flex-basis:0;min-width:0;padding-left:{{ s.pad }};overflow:hidden;transition:flex-grow 620ms cubic-bezier(.22,.61,.36,1),padding 620ms cubic-bezier(.22,.61,.36,1)">
+            <div style="height:100%;background:#131429;position:relative;padding:18px clamp(12px,1.6vw,22px);display:flex;flex-direction:column;justify-content:space-between;opacity:{{ s.op }};transition:opacity 420ms cubic-bezier(.22,.61,.36,1)">
+              <span aria-hidden="true" style="position:absolute;left:0;right:0;top:0;height:3px;background:{{ s.bar }}"></span>
+              <span style="font:500 15px/1 var(--font-display);color:{{ s.bar }}">{{ s.num }}</span>
+              <span style="font:600 clamp(18px,2vw,26px)/1 var(--font-display);text-transform:uppercase;color:#F2F1F8;white-space:nowrap">{{ s.label }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div data-reveal="1" style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;margin-top:28px">
+      <span style="font:300 17px/1.6 var(--font-body);color:#B9B8C8">Setu laikus varam saskaņot ar:</span>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ slots }}" as="c" hint-placeholder-count="6">
+          <x-import component-from-global-scope="HenrixBandDesignSystem_120eaf.Chip" hint-size="auto,36px">{{ c }}</x-import>
+        </sc-for>
+      </div>
+    </div>
+
+    <blockquote data-reveal="1" style="margin:clamp(72px,9vw,128px) 0 0;padding:clamp(28px,3vw,40px) 0;border-top:1px solid #2F2E40;border-bottom:1px solid #2F2E40">
+      <p style="margin:0;max-width:1100px;font:600 clamp(30px,4.2vw,62px)/1.04 var(--font-display);text-transform:uppercase;color:#F2F1F8;text-wrap:balance">Mēs necenšamies pasākumu pielāgot grupai&nbsp;— <span style="color:#3DC6D9">grupas programmu pielāgojam pasākumam.</span></p>
+    </blockquote>
+  </div>
+</section>
+
+<section id="repertuars" aria-labelledby="repertuars-h" style="padding:0 0 clamp(96px,12vw,168px);scroll-margin-top:72px">
+  <div style="max-width:1440px;margin:0 auto;padding:0 clamp(20px,5vw,72px)">
+    <div data-reveal="1" style="display:flex;gap:14px;align-items:baseline;margin-bottom:20px">
+      <span style="font:500 15px/1 var(--font-display);color:#3DC6D9">04</span>
+      <x-import component-from-global-scope="HenrixBandDesignSystem_120eaf.Eyebrow" tone="muted" hint-size="100px,16px">Repertuārs</x-import>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(40px,6vw,96px);align-items:start">
+      <div style="display:flex;flex-direction:column;gap:20px;max-width:620px;font:300 17px/1.75 var(--font-body);color:#B9B8C8">
+        <h2 id="repertuars-h" data-reveal="1" style="margin:0 0 8px;font:600 clamp(48px,7.4vw,112px)/.9 var(--font-display);text-transform:uppercase;color:#F2F1F8">Dziesmas,<br>kurām dzied līdzi</h2>
+        <p data-reveal="1" style="margin:0;text-wrap:pretty">Henrix Band repertuāra pamatā ir pazīstamas un pārbaudītas dziesmas, kas labi strādā ballītēs.</p>
+        <p data-reveal="1" style="margin:0;text-wrap:pretty">Programmā apvienojam <strong>latviešu un ārzemju mūziku</strong>, sākot no dziesmām, kurām publika dzied līdzi, līdz enerģiskiem deju grīdas hitiem.</p>
+        <p data-reveal="1" style="margin:0;text-wrap:pretty">Repertuāru un vakara dinamiku pielāgojam konkrētajam pasākumam, viesu profilam un atmosfērai.</p>
+        <p data-reveal="1" style="margin:0;color:#F2F1F8;font-weight:400;text-wrap:pretty">Mūsu prioritāte nav vienkārši nospēlēt dziesmu sarakstu — mēs skatāmies uz publiku un veidojam vakara enerģiju kopā ar viesiem.</p>
+      </div>
+      <div data-reveal="1" data-reveal-delay="120" style="display:flex;flex-direction:column;gap:14px">
+        <div ref="{{ vidRef }}" data-vid-card="1" onMouseEnter="{{ vidOn }}" onMouseLeave="{{ vidOff }}" style="position:relative;aspect-ratio:4/5;overflow:hidden;background:#131429;isolation:isolate">
+          <img src="assets/singer-live.jpg" alt="" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:56% 40%;display:block;transform:scale({{ vidScale }});transition:transform 900ms cubic-bezier(.22,.61,.36,1)">
+          <sc-if value="{{ vidBg }}" hint-placeholder-val="{{ false }}">
+            <iframe ref="{{ vidFrameRef }}" onLoad="{{ vidLoaded }}" title="Henrix Band dzīvajā — video" src="https://www.youtube-nocookie.com/embed/CZxHxjbiefg?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=CZxHxjbiefg&amp;controls=0&amp;playsinline=1&amp;rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;enablejsapi=1" allow="autoplay; encrypted-media; picture-in-picture" tabindex="-1" style="position:absolute;top:50%;left:50%;width:256%;height:115%;transform:translate(-50%,-50%);border:0;pointer-events:none;opacity:{{ vidOp }};transition:opacity 900ms cubic-bezier(.22,.61,.36,1)"></iframe>
+          </sc-if>
+          <sc-if value="{{ vidDirect }}" hint-placeholder-val="{{ false }}">
+            <iframe ref="{{ vidFrameRef }}" onLoad="{{ vidLoaded }}" title="Henrix Band dzīvajā — video" src="https://www.youtube-nocookie.com/embed/CZxHxjbiefg?autoplay=1&amp;loop=1&amp;playlist=CZxHxjbiefg&amp;controls=0&amp;playsinline=1&amp;rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;disablekb=1&amp;enablejsapi=1" allow="autoplay; encrypted-media; picture-in-picture" tabindex="-1" style="position:absolute;top:50%;left:50%;width:256%;height:115%;transform:translate(-50%,-50%);border:0;pointer-events:none;opacity:{{ vidOp }};transition:opacity 900ms cubic-bezier(.22,.61,.36,1)"></iframe>
+          </sc-if>
+          <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,20,0) 45%,rgba(10,10,20,.9) 100%);opacity:{{ vidScrim }};transition:opacity 620ms cubic-bezier(.22,.61,.36,1);pointer-events:none"></div>
+          <button type="button" onClick="{{ toggleSound }}" onFocus="{{ vidOn }}" onBlur="{{ vidOff }}" aria-pressed="{{ vidPressed }}" aria-label="{{ vidAria }}" style="position:absolute;inset:0;width:100%;height:100%;background:transparent;border:0;padding:0;cursor:pointer;color:#F2F1F8;text-align:left">
+            <span aria-hidden="true" style="position:absolute;left:clamp(20px,3vw,32px);top:clamp(20px,3vw,32px);display:flex;align-items:center;gap:14px">
+              <span style="width:64px;height:64px;border-radius:50%;background:#D941C8;box-shadow:{{ vidGlow }};display:flex;align-items:center;justify-content:center;transition:box-shadow 420ms cubic-bezier(.22,.61,.36,1)">
+                <sc-if value="{{ vidMutedIcon }}" hint-placeholder-val="{{ true }}"><span style="width:0;height:0;border-left:16px solid #fff;border-top:10px solid transparent;border-bottom:10px solid transparent;margin-left:5px"></span></sc-if>
+                <sc-if value="{{ vidSound }}" hint-placeholder-val="{{ false }}"><span style="display:flex;gap:5px"><span style="width:5px;height:18px;background:#fff"></span><span style="width:5px;height:18px;background:#fff"></span></span></sc-if>
+              </span>
+              <span style="font:700 12px/1.3 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:#F2F1F8">{{ vidHint }}</span>
+            </span>
+            <span style="position:absolute;left:clamp(20px,3vw,32px);right:clamp(20px,3vw,32px);bottom:clamp(20px,3vw,32px);display:flex;flex-direction:column;gap:10px;opacity:{{ vidScrim }};transition:opacity 620ms cubic-bezier(.22,.61,.36,1)">
+              <span style="font:700 12px/1.3 var(--font-body);letter-spacing:.22em;text-transform:uppercase;color:#E06ACF">Video</span>
+              <span style="font:600 clamp(28px,3vw,40px)/1 var(--font-display);text-transform:uppercase;color:#F2F1F8">Noskatieties, kā tas izskatās dzīvē</span>
+            </span>
+          </button>
+        </div>
+        <a href="https://www.youtube.com/watch?v=CZxHxjbiefg" target="_blank" rel="noopener" style="align-self:flex-start;font:400 14px/1.4 var(--font-body);color:#9C9BAE" style-hover="color:#F2F1F8">Atvērt YouTube</a>
+      </div>
+    </div>
+
+    <div style="margin-top:clamp(72px,9vw,128px)">
+      <h3 data-reveal="1" style="margin:0 0 12px;font:600 clamp(32px,3.4vw,48px)/1 var(--font-display);text-transform:uppercase;color:#F2F1F8">Repertuāra izlase</h3>
+      <p data-reveal="1" style="margin:0 0 clamp(32px,4vw,48px);max-width:600px;font:300 17px/1.75 var(--font-body);color:#B9B8C8;text-wrap:pretty">Daļa no dziesmām, ko spēlējam. Vakara gaitā tās mainām atbilstoši brīdim — no mierīgākām melodijām vakariņu laikā līdz pilnam deju laukumam.</p>
+      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,48px)">
+          <sc-for list="{{ repCols }}" as="col" hint-placeholder-count="3">
+            <div data-reveal="1" data-reveal-delay="{{ col.delay }}">
+              <x-import component-from-global-scope="HenrixBandDesignSystem_120eaf.SongColumn" index="{{ col.index }}" title="{{ col.title }}" tone="{{ col.tone }}" songs="{{ col.songs }}" hint-size="100%,560px"></x-import>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+        <div role="group" aria-label="Repertuāra kategorijas" style="display:flex;gap:6px;overflow-x:auto;margin-bottom:24px">
+          <sc-for list="{{ repCols }}" as="col" hint-placeholder-count="3">
+            <button type="button" aria-pressed="{{ col.pressed }}" onClick="{{ col.onPick }}" style="flex:none;min-height:44px;padding:0 14px;background:{{ col.bg }};border:1px solid {{ col.border }};color:#F2F1F8;font:400 14px/1 var(--font-body);cursor:pointer;transition:background 220ms cubic-bezier(.22,.61,.36,1),border-color 220ms cubic-bezier(.22,.61,.36,1)">{{ col.title }}</button>
+          </sc-for>
+        </div>
+        <div ref="{{ repRef }}">
+          <x-import component-from-global-scope="HenrixBandDesignSystem_120eaf.SongColumn" index="{{ repCur.index }}" title="{{ repCur.title }}" tone="{{ repCur.tone }}" songs="{{ repCur.songs }}" hint-size="100%,560px"></x-import>
+        </div>
+      </sc-if>
+      <p data-reveal="1" style="margin:clamp(32px,4vw,48px) 0 0;max-width:720px;font:300 17px/1.75 var(--font-body);color:#B9B8C8;text-wrap:pretty">Pilns repertuārs — vairāk nekā <strong>70 dziesmas</strong> latviešu, angļu, spāņu un portugāļu valodā — pieejams pēc pieprasījuma.</p>
+    </div>
+  </div>
+</section>
+
+<section id="ieklauts" aria-labelledby="ieklauts-h" style="padding:clamp(96px,12vw,168px) 0;background:#06060E;scroll-margin-top:72px">
+  <div style="max-width:1440px;margin:0 auto;padding:0 clamp(20px,5vw,72px)">
+    <div data-reveal="1" style="display:flex;gap:14px;align-items:baseline;margin-bottom:20px">
+      <span style="font:500 15px/1 var(--font-display);color:#3DC6D9">05</span>
+      <x-import component-from-global-scope="HenrixBandDesignSystem_120eaf.Eyebrow" tone="muted" hint-size="140px,16px">Kas iekļauts</x-import>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(32px,6vw,96px)">
+      <div style="display:flex;flex-direction:column;justify-content:space-between;gap:32px">
+        <h2 id="ieklauts-h" data-reveal="1" style="margin:0;font:600 clamp(48px,7.4vw,112px)/.9 var(--font-display);text-transform:uppercase;color:#F2F1F8">Kas iekļauts piedāvājumā</h2>
+        <p data-reveal="1" style="margin:0;max-width:440px;font:700 clamp(18px,1.6vw,22px)/1.5 var(--font-body);color:#FFFFFF;text-wrap:pretty">No ierašanās līdz pēdējai dziesmai — par grupas muzikālo un tehnisko pusi parūpējamies mēs.</p>
+      </div>
+      <ol style="list-style:none;margin:0;padding:0;border-bottom:1px solid #2F2E40;--fs-body:18px">
+        <sc-for list="{{ included }}" as="it" hint-placeholder-count="8">
+          <li data-reveal="1" data-reveal-delay="{{ it.delay }}">
+            <x-import component-from-global-scope="HenrixBandDesignSystem_120eaf.NumberedItem" n="{{ it.n }}" hint-size="100%,60px">{{ it.t }}</x-import>
+          </li>
+        </sc-for>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="pieteikt" aria-labelledby="pieteikt-h" style="position:relative;padding:clamp(96px,12vw,168px) 0;scroll-margin-top:72px;overflow:hidden;isolation:isolate">
+  <div aria-hidden="true" style="position:absolute;right:-20%;top:-20%;width:90%;height:90%;z-index:-1;background:radial-gradient(50% 50% at 50% 50%,rgba(106,79,246,.14) 0%,rgba(10,10,20,0) 70%);pointer-events:none"></div>
+  <div style="max-width:1440px;margin:0 auto;padding:0 clamp(20px,5vw,72px)">
+    <div data-reveal="1" style="display:flex;gap:14px;align-items:baseline;margin-bottom:20px">
+      <span style="font:500 15px/1 var(--font-display);color:#3DC6D9">06</span>
+      <x-import component-from-global-scope="HenrixBandDesignSystem_120eaf.Eyebrow" tone="muted" hint-size="100px,16px">Pieteikt pasākumu</x-import>
+    </div>
+    <h2 id="pieteikt-h" data-reveal="1" style="margin:0;max-width:1100px;font:600 clamp(48px,7.4vw,112px)/.9 var(--font-display);text-transform:uppercase;color:#F2F1F8;text-wrap:balance">Izveidosim formātu tieši <span style="color:#3DC6D9">jūsu pasākumam</span></h2>
+    <p data-reveal="1" style="margin:clamp(24px,3vw,36px) 0 0;max-width:600px;font:300 17px/1.75 var(--font-body);color:#B9B8C8;text-wrap:pretty">Lai sagatavotu precīzu piedāvājumu, atsūtiet mums pasākuma datumu, norises vietu, aptuveno viesu skaitu un plānoto vakara formātu.</p>
+
+    <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+      <form onSubmit="{{ onSubmit }}" noValidate="{{ true }}" aria-describedby="form-note" style="margin-top:clamp(40px,5vw,64px);display:flex;flex-direction:column;gap:clamp(28px,3vw,40px)">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:10px">
+          <label data-reveal="1" style="position:relative;background:#131429;padding:22px 20px 16px;display:flex;flex-direction:column;gap:10px;cursor:text">
+            <span aria-hidden="true" style="position:absolute;left:0;right:0;top:0;height:3px;background:#3DC6D9"></span>
+            <span style="font:700 12px/1.3 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:#F2F1F8">Pasākuma datums *</span>
+            <input type="date" name="date" value="{{ form.date }}" onChange="{{ onField }}" required="{{ true }}" aria-invalid="{{ inv.date }}" aria-describedby="err-date" style="background:transparent;border:0;border-bottom:1px solid {{ line.date }};color:#F2F1F8;color-scheme:dark;font:400 18px/1.4 var(--font-body);padding:8px 0;min-height:44px;outline:none;width:100%" style-focus="border-bottom-color:#3DC6D9">
+            <span id="err-date" role="alert" style="font:400 14px/1.3 var(--font-body);color:#E06ACF;min-height:18px">{{ err.date }}</span>
+          </label>
+          <label data-reveal="1" data-reveal-delay="60" style="position:relative;background:#131429;padding:22px 20px 16px;display:flex;flex-direction:column;gap:10px;cursor:text">
+            <span aria-hidden="true" style="position:absolute;left:0;right:0;top:0;height:3px;background:#6A4FF6"></span>
+            <span style="font:700 12px/1.3 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:#F2F1F8">Norises vieta</span>
+            <input type="text" name="place" value="{{ form.place }}" onChange="{{ onField }}" placeholder="piem., Rīga" autocomplete="address-level2" style="background:transparent;border:0;border-bottom:1px solid #3A3950;color:#F2F1F8;font:400 18px/1.4 var(--font-body);padding:8px 0;min-height:44px;outline:none;width:100%" style-focus="border-bottom-color:#3DC6D9">
+            <span style="min-height:18px"></span>
+          </label>
+          <label data-reveal="1" data-reveal-delay="120" style="position:relative;background:#131429;padding:22px 20px 16px;display:flex;flex-direction:column;gap:10px;cursor:text">
+            <span aria-hidden="true" style="position:absolute;left:0;right:0;top:0;height:3px;background:#9B4FE0"></span>
+            <span style="font:700 12px/1.3 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:#F2F1F8">Aptuvenais viesu skaits</span>
+            <input type="number" inputmode="numeric" min="1" name="guests" value="{{ form.guests }}" onChange="{{ onField }}" placeholder="piem., 120" style="background:transparent;border:0;border-bottom:1px solid #3A3950;color:#F2F1F8;font:400 18px/1.4 var(--font-body);padding:8px 0;min-height:44px;outline:none;width:100%" style-focus="border-bottom-color:#3DC6D9">
+            <span style="min-height:18px"></span>
+          </label>
+          <label data-reveal="1" data-reveal-delay="180" style="position:relative;background:#131429;padding:22px 20px 16px;display:flex;flex-direction:column;gap:10px;cursor:pointer">
+            <span aria-hidden="true" style="position:absolute;left:0;right:0;top:0;height:3px;background:#D941C8"></span>
+            <span style="font:700 12px/1.3 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:#F2F1F8">Plānotais vakara formāts</span>
+            <select name="format" value="{{ form.format }}" onChange="{{ onField }}" style="background:transparent;border:0;border-bottom:1px solid #3A3950;color:#F2F1F8;color-scheme:dark;font:400 18px/1.4 var(--font-body);padding:8px 0;min-height:44px;outline:none;width:100%;cursor:pointer" style-focus="border-bottom-color:#3DC6D9">
+              <option value="" style="background:#131429;color:#B9B8C8">izvēlieties</option>
+              <sc-for list="{{ formats }}" as="f" hint-placeholder-count="6"><option value="{{ f }}" style="background:#131429;color:#F2F1F8">{{ f }}</option></sc-for>
+            </select>
+            <span style="min-height:18px"></span>
+          </label>
+        </div>
+
+        <fieldset data-reveal="1" style="border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:14px">
+          <legend style="padding:0;margin-bottom:14px;font:700 12px/1.3 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:#F2F1F8">Sastāvs</legend>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:10px">
+            <sc-for list="{{ formTiers }}" as="ft" hint-placeholder-count="4">
+              <label style="display:flex;align-items:center;gap:14px;min-height:60px;padding:0 18px;border:1px solid {{ ft.border }};background:{{ ft.bg }};cursor:pointer;transition:border-color 220ms cubic-bezier(.22,.61,.36,1),background 220ms cubic-bezier(.22,.61,.36,1)" style-hover="background:#1C1D36">
+                <input type="radio" name="tier" value="{{ ft.id }}" checked="{{ ft.checked }}" onChange="{{ onField }}" style="appearance:none;-webkit-appearance:none;margin:0;flex:none;width:18px;height:18px;border:1px solid {{ ft.ring }};background:{{ ft.dot }};box-shadow:inset 0 0 0 3px #131429;cursor:pointer">
+                <span style="display:flex;flex-direction:column;gap:2px">
+                  <span style="font:600 20px/1.1 var(--font-display);text-transform:uppercase;color:{{ ft.text }}">{{ ft.label }}</span>
+                  <span style="font:400 13px/1.3 var(--font-body);color:#9C9BAE">{{ ft.meta }}</span>
+                </span>
+              </label>
+            </sc-for>
+          </div>
+        </fieldset>
+
+        <div data-reveal="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:clamp(16px,2vw,32px)">
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font:700 12px/1.3 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:#F2F1F8">Vārds, uzvārds *</span>
+            <input type="text" name="name" value="{{ form.name }}" onChange="{{ onField }}" autocomplete="name" required="{{ true }}" aria-invalid="{{ inv.name }}" aria-describedby="err-name" style="background:transparent;border:0;border-bottom:1px solid {{ line.name }};color:#F2F1F8;font:400 18px/1.4 var(--font-body);padding:10px 0;min-height:48px;outline:none" style-focus="border-bottom-color:#3DC6D9">
+            <span id="err-name" role="alert" style="font:400 14px/1.3 var(--font-body);color:#E06ACF;min-height:18px">{{ err.name }}</span>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font:700 12px/1.3 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:#F2F1F8">E-pasts</span>
+            <input type="email" name="email" value="{{ form.email }}" onChange="{{ onField }}" autocomplete="email" aria-invalid="{{ inv.contact }}" aria-describedby="err-contact" style="background:transparent;border:0;border-bottom:1px solid {{ line.contact }};color:#F2F1F8;font:400 18px/1.4 var(--font-body);padding:10px 0;min-height:48px;outline:none" style-focus="border-bottom-color:#3DC6D9">
+            <span id="err-contact" role="alert" style="font:400 14px/1.3 var(--font-body);color:#E06ACF;min-height:18px">{{ err.contact }}</span>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font:700 12px/1.3 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:#F2F1F8">Tālrunis</span>
+            <input type="tel" name="phone" value="{{ form.phone }}" onChange="{{ onField }}" autocomplete="tel" aria-invalid="{{ inv.contact }}" style="background:transparent;border:0;border-bottom:1px solid {{ line.contact }};color:#F2F1F8;font:400 18px/1.4 var(--font-body);padding:10px 0;min-height:48px;outline:none" style-focus="border-bottom-color:#3DC6D9">
+            <span style="min-height:18px"></span>
+          </label>
+        </div>
+
+        <div data-reveal="1" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px 40px;border-top:1px solid #2F2E40;padding-top:28px">
+          <p id="form-note" style="margin:0;max-width:560px;font:300 16px/1.7 var(--font-body);color:#B9B8C8;text-wrap:pretty">Pārbaudīsim pieejamību, palīdzēsim izvēlēties piemērotāko sastāvu un saskaņosim muzikālo programmu ar jūsu pasākuma scenāriju.</p>
+          <button type="submit" style="min-height:56px;padding:0 32px;background:#3DC6D9;color:#0A0A14;border:0;cursor:pointer;font:700 14px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;transition:background 220ms cubic-bezier(.22,.61,.36,1)" style-hover="background:#F2F1F8">Nosūtīt pieprasījumu</button>
+        </div>
+      </form>
+    </sc-if>
+    <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+      <div ref="{{ sentRef }}" tabindex="-1" role="status" style="margin-top:clamp(40px,5vw,64px);position:relative;background:#131429;padding:clamp(28px,4vw,56px);display:flex;flex-direction:column;gap:18px;outline:none">
+        <span aria-hidden="true" style="position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,#3DC6D9 0%,#6A4FF6 40%,#9B4FE0 70%,#D941C8 100%)"></span>
+        <x-import component-from-global-scope="HenrixBandDesignSystem_120eaf.Eyebrow" hint-size="200px,16px">Pieprasījums saņemts</x-import>
+        <p style="margin:0;font:600 clamp(32px,3.6vw,52px)/1 var(--font-display);text-transform:uppercase;color:#F2F1F8">Paldies, {{ sentName }}</p>
+        <p style="margin:0;max-width:620px;font:300 17px/1.75 var(--font-body);color:#B9B8C8;text-wrap:pretty">Pārbaudīsim pieejamību {{ sentDate }}, palīdzēsim izvēlēties piemērotāko sastāvu un saskaņosim muzikālo programmu ar jūsu pasākuma scenāriju.</p>
+        <button type="button" onClick="{{ resetForm }}" style="align-self:flex-start;background:transparent;border:0;border-bottom:1px solid #3DC6D9;color:#3DC6D9;padding:10px 0;cursor:pointer;font:700 13px/1 var(--font-body);letter-spacing:.16em;text-transform:uppercase" style-hover="color:#F2F1F8;border-color:#F2F1F8">Sūtīt vēl vienu pieprasījumu</button>
+      </div>
+    </sc-if>
+  </div>
+</section>
+</main>
+
+<footer style="position:relative;border-top:1px solid #2F2E40">
+  <div style="max-width:1440px;margin:0 auto;padding:clamp(48px,6vw,80px) clamp(20px,5vw,72px) clamp(32px,4vw,48px);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:32px">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <x-import component-from-global-scope="HenrixBandDesignSystem_120eaf.Wordmark" size="{{ 56 }}" stacked="{{ false }}" hint-size="320px,56px"></x-import>
+      <span style="font:700 17px/1 var(--font-body);color:#3DC6D9">Dzīvā mūzika. Īsta ballīte.</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-start;gap:8px;font:400 14px/1.5 var(--font-body);color:#9C9BAE">
+      <a href="https://www.youtube.com/watch?v=CZxHxjbiefg" target="_blank" rel="noopener" style="color:#B9B8C8">Promo video YouTube</a>
+      <span>© 2026 Henrix Band</span>
+    </div>
+  </div>
+  <img src="assets/henrix-band-banner.jpg" alt="Henrix Band logotips un mūziķi uz koncerta gaismu fona" loading="lazy" decoding="async" style="display:block;width:100%;height:clamp(180px,26vw,360px);object-fit:cover;object-position:center 30%">
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;motion&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;auto&quot;, &quot;full&quot;, &quot;reduced&quot;], &quot;default&quot;: &quot;auto&quot;, &quot;tsType&quot;: &quot;'auto'|'full'|'reduced'&quot;, &quot;section&quot;: &quot;Motion&quot;}, &quot;stageLight&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Motion&quot;}, &quot;heroPhoto&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;singer&quot;, &quot;band&quot;], &quot;default&quot;: &quot;singer&quot;, &quot;tsType&quot;: &quot;'singer'|'band'&quot;, &quot;section&quot;: &quot;Hero&quot;}, &quot;defaultTier&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;essential&quot;, &quot;live&quot;, &quot;full&quot;], &quot;default&quot;: &quot;live&quot;, &quot;tsType&quot;: &quot;'essential'|'live'|'full'&quot;, &quot;section&quot;: &quot;Sastāvi&quot;}}">
+const EASE = 'cubic-bezier(.22,.61,.36,1)';
+const TIERS = [
+  { id: 'essential', short: 'Essential', name: 'Henrix Essential', n: 3, color: '#3DC6D9', text: '#3DC6D9', glow: 'rgba(61,198,217,.16)',
+    meta: 'Kompakts sastāvs • 3 mūziķi',
+    choose: 'Ja nepieciešama dzīva mūzika kompaktākam vai elegantākam uzņēmuma pasākumam.',
+    paras: [
+      { text: 'Kompakts, bet pilnvērtīgs dzīvas mūzikas risinājums pasākumiem, kuros svarīga laba atmosfēra, kvalitatīvs skanējums un elastīgs formāts.' },
+      { text: 'Trīs mūziķu sastāvs ļauj saglabāt Henrix Band raksturu un enerģiju, vienlaikus neprasot lielu skatuvi vai sarežģītu tehnisko risinājumu.' }],
+    fit: 'uzņēmumu vakariņām, klientu pasākumiem, pieņemšanām, jubilejām un mazākiem korporatīvajiem pasākumiem.',
+    verdict: 'Labs risinājums, ja vēlaties dzīvu grupu kompaktākā formātā.' },
+  { id: 'live', short: 'Live+', name: 'Henrix Live+', n: 4, color: '#6A4FF6', text: '#8F7DF5', glow: 'rgba(106,79,246,.2)',
+    meta: 'Optimālais sastāvs • 4 mūziķi',
+    choose: 'Ja meklējat universālu risinājumu ar pilnvērtīgu grupas skanējumu un labu ballītes enerģiju.',
+    paras: [
+      { text: 'Mūsu universālākais sastāvs korporatīvajiem pasākumiem.' },
+      { text: 'Četru mūziķu sastāvs nodrošina pilnīgāku skanējumu, lielāku dinamiku un plašākas muzikālās iespējas, vienlaikus saglabājot elastīgu tehnisko risinājumu.' },
+      { text: 'Šis formāts labi darbojas gan vakara sākumā, gan brīdī, kad pasākums pāriet īstā ballītē un deju laukumā.' }],
+    fit: 'korporatīvajām ballēm, uzņēmumu jubilejām, Ziemassvētku un gada noslēguma pasākumiem, komandas svinībām un vidēja izmēra pasākumiem.',
+    verdict: 'Optimāla izvēle starp kompaktu sastāvu un pilnas grupas jaudu.' },
+  { id: 'full', short: 'Full Experience', name: 'Henrix Full Experience', n: 5, color: '#D941C8', text: '#E06ACF', glow: 'rgba(217,65,200,.17)',
+    meta: 'Pilnais sastāvs • 5 mūziķi',
+    choose: 'Ja vēlaties maksimālu dzīvas grupas efektu un Henrix Band kā vienu no centrālajiem vakara elementiem.',
+    paras: [
+      { text: 'Pilnvērtīga Henrix Band koncertballītes pieredze.' },
+      { lead: '5 mūziķi:', text: 'vokāls / akustiskā ģitāra • elektriskā ģitāra • basģitāra • taustiņi • bungas' },
+      { text: 'Pilnais sastāvs nodrošina maksimāli dzīvu, dinamisku un pilnskanīgu grupas skanējumu. Tas ir variants pasākumiem, kuros grupa ir viena no galvenajām vakara programmas daļām un mērķis ir pilns deju laukums un īsta koncertballītes sajūta.' }],
+    fit: 'lielākām uzņēmumu ballēm, gada noslēguma pasākumiem, jubilejām, vasaras pasākumiem un svinībām ar lielāku viesu skaitu.',
+    verdict: 'Maksimāla enerģija un pilnvērtīga Henrix Band pieredze.' }
+];
+const NAV = [['par-mums', 'Par mums'], ['sastavi', 'Sastāvi'], ['programma', 'Programma'], ['repertuars', 'Repertuārs'], ['pieteikt', 'Kontakti']];
+const QUOTE = 'Labs uzņēmuma pasākums nav tikai programma — tā ir atmosfēra, cilvēki un vakars, kuru gribas atcerēties.';
+const S = (a) => a.map(([title, artist]) => ({ title, artist }));
+const SONGS = [
+  { index: 1, title: 'Deju laukumam', tone: 'full', songs: S([['Can’t Stop The Feeling', 'Justin Timberlake'], ['September', 'Earth, Wind & Fire'], ['24K Magic', 'Bruno Mars'], ['Celebration', 'Kool & The Gang'], ['Sex Bomb', 'Tom Jones'], ['Are You Gonna Be My Girl', 'Jet'], ['Sex On Fire', 'Kings of Leon'], ['Let Me Entertain You', 'Robbie Williams']]) },
+  { index: 2, title: 'Latviešu dziesmas', tone: 'live', songs: S([['Laternas', 'Sudden Lights'], ['Tu tuvojies sev', 'Z-Scars'], ['Ogles', 'Prāta Vētra'], ['Kurtizāņu ugunskurs', 'Dakota'], ['Pa ceļam', 'Dons'], ['Kad Ēģiptē sniegs', 'Tumsa'], ['Vējā', 'Fēlikss Ķiģelis'], ['Zīlīte', 'Remix']]) },
+  { index: 3, title: 'Pasaules hiti', tone: 'essential', songs: S([['It’s My Life', 'Bon Jovi'], ['Simply The Best', 'Tina Turner'], ['What’s Up', '4 Non Blondes'], ['Wicked Game', 'Chris Isaak'], ['Watermelon Sugar', 'Harry Styles'], ['Yellow', 'Coldplay'], ['Love Me Again', 'John Newman'], ['Lonely Boy', 'The Black Keys']]) }
+];
+const INCLUDED = ['Henrix Band izvēlētajā sastāvā', '3 × 50 minūšu muzikālā programma', 'programmas pielāgošana pasākuma norisei', 'grupas instrumenti un nepieciešamais tehniskais aprīkojums', 'skaņas nodrošinājums atbilstoši saskaņotajam pasākuma formātam', 'grupas transports', 'tehniskā sagatavošanās un soundcheck', 'repertuāra pielāgošana konkrētajai auditorijai'];
+const SLOTS = ['vakariņām', 'vadītāja programmu', 'apbalvošanu', 'priekšnesumiem', 'DJ', 'citām pasākuma aktivitātēm'];
+const FORMATS = ['Kāzas', 'Uzņēmuma pasākums', 'Jaungada balle', 'Ziemassvētku balle', 'Jubileja', 'Cits'];
+const SEG_COLORS = ['#3DC6D9', '#6A4FF6', '#9B4FE0', '#D941C8'];
+const EMPTY = { date: '', place: '', guests: '', format: '', tier: '', name: '', email: '', phone: '' };
+
+class Component extends DCLogic {
+  state = { tier: (this.props && this.props.defaultTier) || 'live', sets: 3, menu: false, narrow: false, scrolled: false, active: '', repTab: 0, form: { ...EMPTY }, errors: {}, sent: false, vid: false, vidIn: false, vidDirect: false, vidReady: false, vidSound: false };
+  rootRef = React.createRef(); panelRef = React.createRef(); lightRef = React.createRef(); sentRef = React.createRef(); repRef = React.createRef(); vidRef = React.createRef(); vidFrameRef = React.createRef();
+
+  reduced() {
+    const m = this.props.motion || 'auto';
+    if (m === 'reduced') return true;
+    if (m === 'full') return false;
+    return !!(this.mq && this.mq.matches);
+  }
+
+  componentDidMount() {
+    this.mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    this.mq.addEventListener && this.mq.addEventListener('change', () => { this.applyMotionMode(); this.forceUpdate(); });
+    const root = this.rootRef.current;
+    if (root && window.ResizeObserver) {
+      this.ro = new ResizeObserver(([e]) => { const n = e.contentRect.width < 980; if (n !== this.state.narrow) this.setState({ narrow: n, menu: n ? this.state.menu : false }); });
+      this.ro.observe(root);
+    }
+    this.onScroll = () => { if (this.raf) return; this.raf = requestAnimationFrame(() => { this.raf = 0; this.tick(); }); };
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    window.addEventListener('resize', this.onScroll, { passive: true });
+    this.onKey = (e) => { if (e.key === 'Escape' && this.state.menu) this.setMenu(false); };
+    window.addEventListener('keydown', this.onKey);
+    this.applyMotionMode(true);
+    this.tick();
+
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.onScroll); window.removeEventListener('resize', this.onScroll); window.removeEventListener('keydown', this.onKey);
+    this.ro && this.ro.disconnect(); this.vio && this.vio.disconnect(); this.io && this.io.disconnect(); document.body.style.overflow = '';
+  }
+
+  componentDidUpdate(pp, ps) {
+    if (pp.motion !== this.props.motion) this.applyMotionMode();
+    if (pp.defaultTier !== this.props.defaultTier && this.props.defaultTier) this.setState({ tier: this.props.defaultTier });
+    const rm = this.reduced();
+    if (ps.tier !== this.state.tier && !rm && this.panelRef.current) {
+      this.panelRef.current.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: EASE });
+      const big = this.panelRef.current.querySelector('[data-big-n]');
+      big && big.animate([{ transform: 'translateY(18%)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 620, easing: EASE });
+    }
+    if (ps.repTab !== this.state.repTab && !rm && this.repRef.current) this.repRef.current.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 320, easing: EASE });
+    if (!ps.menu && this.state.menu && !rm) {
+      document.querySelectorAll('[data-menu-item]').forEach((el, i) => el.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }], { duration: 520, delay: 40 + i * 50, easing: EASE, fill: 'backwards' }));
+    }
+    if (!ps.sent && this.state.sent && this.sentRef.current) {
+      this.sentRef.current.focus({ preventScroll: true });
+      !rm && this.sentRef.current.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 520, easing: EASE });
+    }
+  }
+
+  applyMotionMode(first) {
+    const root = this.rootRef.current; if (!root) return;
+    const rm = this.reduced();
+    const reveals = root.querySelectorAll('[data-reveal]');
+    this.io && this.io.disconnect();
+    if (rm) {
+      reveals.forEach(el => { el.style.opacity = ''; el.style.transform = ''; el.style.transition = ''; });
+      root.querySelectorAll('[data-parallax]').forEach(el => { el.style.transform = ''; });
+      root.querySelectorAll('[data-word]').forEach(el => { el.style.opacity = '1'; });
+      if (this.lightRef.current) this.lightRef.current.style.opacity = '0';
+      return;
+    }
+    const vh = window.innerHeight;
+    this.io = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        const el = en.target, d = +(el.dataset.revealDelay || 0);
+        el.style.transition = `opacity 800ms ${EASE} ${d}ms, transform 800ms ${EASE} ${d}ms`;
+        el.style.opacity = '1'; el.style.transform = 'none';
+        this.io.unobserve(el);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    reveals.forEach(el => {
+      if (el.getBoundingClientRect().top < vh * 0.94) return;
+      el.style.opacity = '0'; el.style.transform = 'translateY(28px)';
+      this.io.observe(el);
+    });
+    if (first) {
+      root.querySelectorAll('[data-hero-line]').forEach((el, i) => el.animate([{ transform: 'translateY(104%)' }, { transform: 'none' }], { duration: 1100, delay: 120 + i * 120, easing: EASE, fill: 'backwards' }));
+      root.querySelectorAll('[data-hero-fade]').forEach((el, i) => el.animate([{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }], { duration: 900, delay: 520 + i * 90, easing: EASE, fill: 'backwards' }));
+      const img = root.querySelector('[data-hero-img]');
+      img && img.animate([{ transform: 'scale(1.08)', opacity: 0.2 }, { transform: 'scale(1)', opacity: 1 }], { duration: 1800, easing: EASE, fill: 'backwards' });
+    }
+  }
+
+  tick() {
+    const root = this.rootRef.current; if (!root) return;
+    const y = window.scrollY, vh = window.innerHeight;
+    const scrolled = y > 24;
+    let active = '';
+    for (const [id] of NAV) { const el = document.getElementById(id); if (el && el.getBoundingClientRect().top < vh * 0.45) active = id; }
+    if (scrolled !== this.state.scrolled || active !== this.state.active) this.setState({ scrolled, active });
+    if (!this.state.vidIn && !this.state.vidDirect && !this.reduced()) {
+      const v = this.vidRef.current || root.querySelector('[data-vid-card]');
+      if (v) { const r = v.getBoundingClientRect(); if (r.top < vh + 300 && r.bottom > -300) this.setState({ vidIn: true }); }
+    }
+    if (this.reduced()) return;
+    root.querySelectorAll('[data-parallax]').forEach(el => {
+      const f = parseFloat(el.dataset.parallax);
+      const box = el.parentElement.getBoundingClientRect();
+      if (box.bottom < -100 || box.top > vh + 100) return;
+      const off = el.dataset.parallaxMode === 'top' ? -box.top * f : -(box.top + box.height / 2 - vh / 2) * f;
+      el.style.transform = `translate3d(0,${off.toFixed(1)}px,0)`;
+    });
+    const q = root.querySelector('[data-quote]');
+    if (q) {
+      const r = q.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (vh * 0.82 - r.top) / (r.height + vh * 0.3)));
+      const words = q.querySelectorAll('[data-word]'), n = words.length;
+      words.forEach((w, i) => { const v = Math.min(1, Math.max(0, p * (n + 2) - i)); w.style.opacity = (0.18 + 0.82 * v).toFixed(2); });
+    }
+  }
+
+  ytCmd(func, args) {
+    const f = this.vidFrameRef.current; if (!f || !f.contentWindow) return;
+    f.contentWindow.postMessage(JSON.stringify({ event: 'command', func, args: args || [] }), '*');
+  }
+
+  setMenu(open) {
+    this.setState({ menu: open });
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+
+  scrollToId(id) {
+    const el = document.getElementById(id); if (!el) return;
+    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: this.reduced() ? 'auto' : 'smooth' });
+  }
+
+  validate(f) {
+    const e = {};
+    if (!f.date) e.date = 'Norādiet pasākuma datumu.';
+    if (!f.name.trim()) e.name = 'Norādiet savu vārdu.';
+    if (!f.email.trim() && !f.phone.trim()) e.contact = 'Norādiet e-pastu vai tālruni.';
+    else if (f.email.trim() && !/^\S+@\S+\.\S+$/.test(f.email.trim())) e.contact = 'Pārbaudiet e-pasta adresi.';
+    return e;
+  }
+
+  renderVals() {
+    const st = this.state;
+    const cur0 = TIERS.find(t => t.id === st.tier) || TIERS[1];
+    const narrow = st.narrow;
+    const tiers = TIERS.map(t => {
+      const sel = t.id === st.tier;
+      return { ...t, tabId: 'tab-' + t.id, stripMeta: `${t.n} mūziķi`, jumpLabel: `${t.name}, ${t.n} mūziķi — skatīt sastāvu`,
+        ariaSel: sel ? 'true' : 'false', tabIndex: sel ? 0 : -1, tabBg: sel ? '#1C1D36' : '#131429', barOp: sel ? 1 : 0.35, glowOp: sel ? 1 : 0,
+        onSelect: () => this.setState({ tier: t.id }),
+        onJump: () => { this.setState({ tier: t.id }); this.scrollToId('sastavi'); } };
+    });
+    const cur = { ...cur0, tabId: 'tab-' + cur0.id, cta: `Pieteikt ${cur0.short}` };
+    const f = st.form, err = st.errors;
+    const pickedTier = f.tier;
+    const formTiers = [...TIERS.map(t => ({ id: t.id, label: t.short, meta: `${t.n} mūziķi`, color: t.color, text: t.text })), { id: 'help', label: 'Palīdziet izvēlēties', meta: 'ieteiksim piemērotāko', color: '#B9B8C8', text: '#F2F1F8' }]
+      .map(t => { const c = pickedTier === t.id; return { ...t, checked: c, border: c ? t.color : '#3A3950', bg: c ? '#1C1D36' : 'transparent', ring: c ? t.color : '#6E6D80', dot: c ? t.color : 'transparent' }; });
+    const words = QUOTE.replace(' —', '\u00a0—').split(' ');
+    const dashAt = words.findIndex(w => w.includes('—'));
+    const quoteWords = words.map((w, i) => ({ t: w + (i < words.length - 1 ? ' ' : ''), color: i > dashAt ? '#3DC6D9' : '#F2F1F8' }));
+    const segs = [0, 1, 2, 3].map(i => {
+      const on = i < st.sets;
+      return { num: String(i + 1).padStart(2, '0'), label: st.sets === 3 ? '50 min' : `${i + 1}. sets`, grow: on ? 1 : 0, pad: i === 0 ? '0px' : (on ? '6px' : '0px'), op: on ? 1 : 0, bar: SEG_COLORS[i] };
+    });
+    const sentDate = f.date ? `${f.date.split('-').reverse().join('.')}` : '';
+    return {
+      rootRef: this.rootRef, panelRef: this.panelRef, lightRef: this.lightRef, sentRef: this.sentRef, repRef: this.repRef,
+      wide: !narrow, narrow,
+      navBg: st.scrolled || st.menu ? '#0A0A14' : 'rgba(10,10,20,0)',
+      navLine: st.scrolled && !st.menu ? '#2F2E40' : 'rgba(47,46,64,0)',
+      navItems: NAV.map(([id, label], i) => ({ href: '#' + id, label, num: String(i + 1).padStart(2, '0'), current: st.active === id ? 'true' : undefined, color: st.active === id ? '#F2F1F8' : '#B9B8C8', bar: st.active === id ? 1 : 0 })),
+      menuOpen: narrow && st.menu, menuExpanded: st.menu ? 'true' : 'false', menuLabel: st.menu ? 'Aizvērt' : 'Izvēlne',
+      burgerTop: st.menu ? 'translateY(3.25px) rotate(45deg)' : 'none', burgerBot: st.menu ? 'translateY(-3.25px) rotate(-45deg)' : 'none',
+      toggleMenu: () => this.setMenu(!st.menu), closeMenu: () => st.menu && this.setMenu(false),
+      heroSinger: this.props.heroPhoto !== 'band', heroBand: this.props.heroPhoto === 'band',
+      onHeroMove: (e) => {
+        const l = this.lightRef.current; if (!l || this.reduced() || e.pointerType !== 'mouse' || this.props.stageLight === false) return;
+        const r = e.currentTarget.getBoundingClientRect();
+        l.style.opacity = '1'; l.style.transform = `translate3d(${e.clientX - r.left}px,${e.clientY - r.top}px,0)`;
+      },
+      onHeroLeave: () => { if (this.lightRef.current) this.lightRef.current.style.opacity = '0'; },
+      tiers, cur,
+      onTabKey: (e) => {
+        const k = e.key; const i = TIERS.findIndex(t => t.id === st.tier);
+        let ni = null;
+        if (k === 'ArrowRight' || k === 'ArrowDown') ni = (i + 1) % 3; else if (k === 'ArrowLeft' || k === 'ArrowUp') ni = (i + 2) % 3; else if (k === 'Home') ni = 0; else if (k === 'End') ni = 2;
+        if (ni === null) return; e.preventDefault();
+        this.setState({ tier: TIERS[ni].id }, () => { const b = document.getElementById('tab-' + TIERS[ni].id); b && b.focus(); });
+      },
+      bookCurrent: () => { this.setState({ form: { ...st.form, tier: cur0.id } }); this.scrollToId('pieteikt'); },
+      quoteWords,
+      setOpts: [3, 4].map(n => ({ label: n === 3 ? '3 × 50 min' : '4 īsāki seti', pressed: st.sets === n ? 'true' : 'false', bg: st.sets === n ? '#F2F1F8' : 'transparent', color: st.sets === n ? '#0A0A14' : '#B9B8C8', onPick: () => this.setState({ sets: n }) })),
+      segs, timelineLabel: st.sets === 3 ? 'Programma: trīs seti pa 50 minūtēm' : 'Programma: četri īsāki seti',
+      slots: SLOTS,
+      repCols: SONGS.map((c, i) => ({ ...c, delay: i * 90, pressed: st.repTab === i ? 'true' : 'false', bg: st.repTab === i ? '#1C1D36' : 'transparent', border: st.repTab === i ? ['#D941C8', '#6A4FF6', '#3DC6D9'][i] : '#3A3950', onPick: () => this.setState({ repTab: i }) })),
+      repCur: SONGS[st.repTab],
+      vidOn: () => this.setState({ vid: true }), vidOff: () => this.setState({ vid: false }),
+      vidBg: st.vidIn && !st.vidDirect, vidDirect: st.vidDirect,
+      vidOp: st.vidReady ? 1 : 0, vidScrim: st.vidSound ? 0 : 1,
+      vidSound: st.vidSound, vidMutedIcon: !st.vidSound, vidPressed: st.vidSound ? 'true' : 'false',
+      vidHint: st.vidSound ? 'Izslēgt skaņu' : (st.vidIn || st.vidDirect ? 'Ieslēgt skaņu' : 'Atskaņot'),
+      vidAria: st.vidSound ? 'Izslēgt video skaņu' : 'Atskaņot Henrix Band video ar skaņu',
+      vidLoaded: () => setTimeout(() => this.setState({ vidReady: true }), 400),
+      toggleSound: () => {
+        if (!st.vidIn && !st.vidDirect) { this.setState({ vidDirect: true, vidSound: true }); return; }
+        if (st.vidSound) { this.ytCmd('mute'); this.setState({ vidSound: false }); }
+        else { if (!this.unmutedOnce) { this.ytCmd('seekTo', [0, true]); this.unmutedOnce = true; } this.ytCmd('unMute'); this.ytCmd('setVolume', [100]); this.ytCmd('playVideo'); this.setState({ vidSound: true }); }
+      },
+      vidScale: st.vid && !this.reduced() ? 1.04 : 1, vidGlow: st.vid ? '0 6px 32px rgba(217,65,200,.65)' : '0 4px 18px rgba(217,65,200,.45)',
+      included: INCLUDED.map((t, i) => ({ t, n: i + 1, delay: i * 50 })),
+      formats: FORMATS, formTiers, form: f,
+      err: { date: err.date || '', name: err.name || '', contact: err.contact || '' },
+      inv: { date: err.date ? 'true' : 'false', name: err.name ? 'true' : 'false', contact: err.contact ? 'true' : 'false' },
+      line: { date: err.date ? '#E06ACF' : '#3A3950', name: err.name ? '#E06ACF' : '#3A3950', contact: err.contact ? '#E06ACF' : '#3A3950' },
+      onField: (e) => {
+        const { name, value } = e.target;
+        const form = { ...this.state.form, [name]: value };
+        const errors = { ...this.state.errors };
+        if (Object.keys(errors).length) { const v = this.validate(form); ['date', 'name', 'contact'].forEach(k => { if (!v[k]) delete errors[k]; }); }
+        this.setState({ form, errors });
+      },
+      onSubmit: (e) => {
+        e.preventDefault();
+        const v = this.validate(this.state.form);
+        if (Object.keys(v).length) {
+          this.setState({ errors: v }, () => { const first = v.date ? 'date' : v.name ? 'name' : 'email'; const el = document.querySelector(`[name="${first}"]`); el && el.focus(); });
+          return;
+        }
+        this.setState({ sent: true, errors: {} });
+      },
+      notSent: !st.sent, sent: st.sent, sentName: (f.name.trim().split(' ')[0] || ''), sentDate: sentDate ? `${sentDate}` : '',
+      resetForm: () => this.setState({ sent: false, form: { ...EMPTY }, errors: {} })
+    };
+  }
+}
+</script>
+</body>
+</html>
