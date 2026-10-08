@@ -2,7 +2,7 @@
 
 Static site for Henrix Band, served by GitHub Pages at https://henrix.lv (custom domain via `CNAME`).
 
-- `index.html`, `assets/` — the site (no build step, no third-party requests until the visitor plays the video).
+- `index.html`, `assets/` — the site (no build step; interactions and motion port the original component logic 1:1).
 - `_source/` — original Claude Design export, kept for reference. Jekyll skips `_` folders, so it is not published.
 
 ## To finish
