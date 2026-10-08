@@ -69,7 +69,7 @@
       anim($('.big-n', body), [{ transform: 'translateY(18%)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 620, easing: EASE });
     }
   }
-  selectTier('live');
+  selectTier('full'); // default line-up: Henrix Full Experience
   $$('.tab').forEach(function (t) { t.addEventListener('click', function () { selectTier(t.dataset.tier); }); });
   $('.tablist').addEventListener('keydown', function (e) {
     var i = TIERS.indexOf(cur), ni = null;
