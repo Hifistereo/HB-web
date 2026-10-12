@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self' https://formsubmit.co; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Henrix Band — dzīvā mūzika kāzām, ballēm un svinībām</title>
 <meta name="description" content="Henrix Band — dzīvās mūzikas grupa kāzām, privātām ballītēm, jubilejām, uzņēmumu ballēm, gada noslēguma un Ziemassvētku pasākumiem visā Latvijā. 3–5 mūziķi, 3 × 50 min programma, latviešu un pasaules hiti.">
@@ -408,31 +408,33 @@
     <p class="lead intro" data-reveal>Lai sagatavotu precīzu piedāvājumu, atsūtiet mums pasākuma datumu, norises vietu, aptuveno viesu skaitu un plānoto vakara formātu.</p>
     <p class="direct" data-reveal><a href="mailto:henrixband@gmail.com">henrixband@gmail.com</a><a href="tel:+37125972689">+371 25 972 689</a></p>
 
-    <!-- Form backend: set action to the Formspree / Web3Forms endpoint and add its origin to CSP connect-src + form-action. -->
-    <form class="enquiry" id="enquiry" method="post" action="" novalidate aria-describedby="form-note">
+    <!-- Form backend: FormSubmit.co (JS posts to its /ajax/ endpoint; without JS the browser posts here). Origin is allowed in CSP connect-src + form-action. -->
+    <form class="enquiry" id="enquiry" method="post" action="https://formsubmit.co/henrixband@gmail.com" aria-describedby="form-note">
+      <input type="hidden" name="_subject" value="Henrix Band — jauns pasākuma pieprasījums">
+      <input type="hidden" name="_template" value="table">
       <div class="f-cards">
         <label class="f-card" data-reveal>
           <span class="bar bg-essential" aria-hidden="true"></span>
           <span class="f-lbl">Pasākuma datums *</span>
-          <input class="f-in" type="date" name="date" required aria-describedby="err-date">
+          <input class="f-in" type="date" name="Datums" required aria-describedby="err-date">
           <span class="f-err" id="err-date" role="alert"></span>
         </label>
         <label class="f-card" data-reveal data-reveal-delay="60">
           <span class="bar bg-live" aria-hidden="true"></span>
           <span class="f-lbl">Norises vieta</span>
-          <input class="f-in" type="text" name="place" placeholder="piem., Rīga" autocomplete="address-level2">
+          <input class="f-in" type="text" name="Vieta" placeholder="piem., Rīga" autocomplete="address-level2">
           <span class="f-err"></span>
         </label>
         <label class="f-card" data-reveal data-reveal-delay="120">
           <span class="bar bg-purple" aria-hidden="true"></span>
           <span class="f-lbl">Aptuvenais viesu skaits</span>
-          <input class="f-in" type="number" inputmode="numeric" min="1" name="guests" placeholder="piem., 120">
+          <input class="f-in" type="number" inputmode="numeric" min="1" name="Viesi" placeholder="piem., 120">
           <span class="f-err"></span>
         </label>
         <label class="f-card" data-reveal data-reveal-delay="180">
           <span class="bar bg-full" aria-hidden="true"></span>
           <span class="f-lbl">Plānotais vakara formāts</span>
-          <select class="f-in" name="format">
+          <select class="f-in" name="Pasākums">
             <option value="">izvēlieties</option>
             <option>Kāzas</option><option>Privāta ballīte</option><option>Jubileja</option><option>Uzņēmuma pasākums</option><option>Jaungada balle</option><option>Ziemassvētku balle</option><option>Cits</option>
           </select>
@@ -443,17 +445,17 @@
       <fieldset data-reveal>
         <legend class="f-lbl">Sastāvs</legend>
         <div class="f-tiers">
-          <label class="f-tier essential"><input type="radio" name="tier" value="Essential"><span><span class="t-name tx-essential">Essential</span><span class="t-sub">3 mūziķi</span></span></label>
-          <label class="f-tier live"><input type="radio" name="tier" value="Live+"><span><span class="t-name tx-live">Live+</span><span class="t-sub">4 mūziķi</span></span></label>
-          <label class="f-tier full"><input type="radio" name="tier" value="Full Experience"><span><span class="t-name tx-full">Full Experience</span><span class="t-sub">5 mūziķi</span></span></label>
-          <label class="f-tier help"><input type="radio" name="tier" value="Palīdziet izvēlēties"><span><span class="t-name">Palīdziet izvēlēties</span><span class="t-sub">ieteiksim piemērotāko</span></span></label>
+          <label class="f-tier essential"><input type="radio" name="Sastāvs" value="Essential"><span><span class="t-name tx-essential">Essential</span><span class="t-sub">3 mūziķi</span></span></label>
+          <label class="f-tier live"><input type="radio" name="Sastāvs" value="Live+"><span><span class="t-name tx-live">Live+</span><span class="t-sub">4 mūziķi</span></span></label>
+          <label class="f-tier full"><input type="radio" name="Sastāvs" value="Full Experience"><span><span class="t-name tx-full">Full Experience</span><span class="t-sub">5 mūziķi</span></span></label>
+          <label class="f-tier help"><input type="radio" name="Sastāvs" value="Palīdziet izvēlēties"><span><span class="t-name">Palīdziet izvēlēties</span><span class="t-sub">ieteiksim piemērotāko</span></span></label>
         </div>
       </fieldset>
 
       <div class="f-contact" data-reveal>
         <label>
           <span class="f-lbl">Vārds, uzvārds *</span>
-          <input class="f-in" type="text" name="name" autocomplete="name" required aria-describedby="err-name">
+          <input class="f-in" type="text" name="Kontaktpersona" autocomplete="name" required aria-describedby="err-name">
           <span class="f-err" id="err-name" role="alert"></span>
         </label>
         <label>
@@ -463,17 +465,18 @@
         </label>
         <label>
           <span class="f-lbl">Tālrunis</span>
-          <input class="f-in" type="tel" name="phone" autocomplete="tel" aria-describedby="err-contact">
+          <input class="f-in" type="tel" name="Tālrunis" autocomplete="tel" aria-describedby="err-contact">
           <span class="f-err"></span>
         </label>
       </div>
-      <label class="hp" aria-hidden="true">Neaizpildīt<input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label>
+      <label class="hp" aria-hidden="true">Neaizpildīt<input type="text" name="_honey" tabindex="-1" autocomplete="off"></label>
 
       <div class="f-foot" data-reveal>
         <p id="form-note">Pārbaudīsim pieejamību, palīdzēsim izvēlēties piemērotāko sastāvu un saskaņosim muzikālo programmu ar jūsu pasākuma scenāriju.</p>
         <button type="submit" class="btn btn-primary">Nosūtīt pieprasījumu</button>
       </div>
       <p class="f-status" id="f-status" role="alert"></p>
+      <p class="f-privacy">Pieprasījums tiek nosūtīts ar FormSubmit starpniecību, un jūsu dati tiek izmantoti tikai, lai atbildētu uz šo pieprasījumu.</p>
     </form>
 
     <div class="sent" id="sent" tabindex="-1" role="status" hidden>

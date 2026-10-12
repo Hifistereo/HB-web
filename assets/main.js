@@ -82,7 +82,7 @@
   $$('.book').forEach(function (a) {
     a.addEventListener('click', function (e) {
       e.preventDefault();
-      var r = $('#enquiry input[name=tier][value="' + FORM_TIER[a.dataset.tier] + '"]'); if (r) r.checked = true;
+      var r = $('#enquiry input[name=Sastāvs][value="' + FORM_TIER[a.dataset.tier] + '"]'); if (r) r.checked = true;
       scrollToId('pieteikt');
     });
   });
@@ -179,23 +179,24 @@
   // ---- enquiry form ----
   var form = $('#enquiry'), sent = $('#sent'), status = $('#f-status'), errors = {};
   var F = function (n) { return form.elements[n]; };
+  form.noValidate = true; // custom validation below; native checks stay on when JS is off
   function validate() {
-    var e = {}, email = F('email').value.trim(), phone = F('phone').value.trim();
-    if (!F('date').value) e.date = 'Norādiet pasākuma datumu.';
-    if (!F('name').value.trim()) e.name = 'Norādiet savu vārdu.';
+    var e = {}, email = F('email').value.trim(), phone = F('Tālrunis').value.trim();
+    if (!F('Datums').value) e.date = 'Norādiet pasākuma datumu.';
+    if (!F('Kontaktpersona').value.trim()) e.name = 'Norādiet savu vārdu.';
     if (!email && !phone) e.contact = 'Norādiet e-pastu vai tālruni.';
     else if (email && !/^\S+@\S+\.\S+$/.test(email)) e.contact = 'Pārbaudiet e-pasta adresi.';
     return e;
   }
   function showErrors() {
     $('#err-date').textContent = errors.date || ''; $('#err-name').textContent = errors.name || ''; $('#err-contact').textContent = errors.contact || '';
-    F('date').setAttribute('aria-invalid', errors.date ? 'true' : 'false');
-    F('name').setAttribute('aria-invalid', errors.name ? 'true' : 'false');
+    F('Datums').setAttribute('aria-invalid', errors.date ? 'true' : 'false');
+    F('Kontaktpersona').setAttribute('aria-invalid', errors.name ? 'true' : 'false');
     F('email').setAttribute('aria-invalid', errors.contact ? 'true' : 'false');
-    F('phone').setAttribute('aria-invalid', errors.contact ? 'true' : 'false');
+    F('Tālrunis').setAttribute('aria-invalid', errors.contact ? 'true' : 'false');
   }
   // as in the original: editing only clears errors that are now fixed, it never adds new ones
-  // a previous result notice (mail fallback / send error) no longer applies once the form changes
+  // a previous send error no longer applies once the form changes
   function clearStatus() { status.textContent = ''; status.classList.remove('info'); }
   form.addEventListener('input', function () {
     clearStatus();
@@ -208,36 +209,24 @@
     ev.preventDefault();
     clearStatus();
     var v = validate();
-    if (Object.keys(v).length) { errors = v; showErrors(); F(v.date ? 'date' : v.name ? 'name' : 'email').focus(); return; }
+    if (Object.keys(v).length) { errors = v; showErrors(); F(v.date ? 'Datums' : v.name ? 'Kontaktpersona' : 'email').focus(); return; }
     errors = {}; showErrors();
-    var endpoint = form.getAttribute('action');
-    if (!endpoint) { mailFallback(); return; }
     var btn = $('button[type=submit]', form); btn.disabled = true;
-    var data = new FormData(form);
-    data.append('_subject', 'Henrix Band pieprasījums — ' + F('date').value);
-    fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
-      .then(function (r) { if (!r.ok) throw new Error(r.status); onSent(); })
-      .catch(function () { status.textContent = 'Neizdevās nosūtīt. Lūdzu, mēģiniet vēlreiz vai sazinieties ar mums tieši.'; })
+    var data = new FormData(form), d = dmy(F('Datums').value);
+    data.set('Datums', d);
+    data.set('_subject', 'Henrix Band — jauns pasākuma pieprasījums (' + d + ')');
+    // only an explicit success counts: FormSubmit can answer 200 with success "false" (e.g. before activation)
+    fetch(form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), { method: 'POST', body: data, headers: { Accept: 'application/json' } })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { if (!j || (j.success !== true && j.success !== 'true')) throw new Error('not sent'); onSent(); })
+      .catch(function () { status.textContent = 'Neizdevās nosūtīt. Lūdzu, mēģiniet vēlreiz vai sazinieties ar mums tieši: henrixband@gmail.com, +371 25 972 689.'; })
       .then(function () { btn.disabled = false; });
   });
-  // no form service connected yet: hand the enquiry to the visitor's mail app
-  function mailFallback() {
-    var v = function (n) { var el = F(n); return el && el.value ? el.value.trim() : ''; };
-    var tier = $('input[name=tier]:checked', form);
-    var d = v('date') ? v('date').split('-').reverse().join('.') : '';
-    var lines = [
-      'Pasākuma datums: ' + d, 'Norises vieta: ' + v('place'), 'Viesu skaits: ' + v('guests'),
-      'Vakara formāts: ' + v('format'), 'Sastāvs: ' + (tier ? tier.value : ''), '',
-      'Vārds: ' + v('name'), 'E-pasts: ' + v('email'), 'Tālrunis: ' + v('phone')
-    ];
-    window.location.href = 'mailto:henrixband@gmail.com?subject=' + encodeURIComponent('Pieprasījums — ' + d) + '&body=' + encodeURIComponent(lines.join('\n'));
-    status.classList.add('info');
-    status.textContent = 'Atvērām e-pasta vēstuli ar jūsu pieprasījumu — atliek nospiest “Sūtīt”. Ja tā neatvērās, rakstiet uz henrixband@gmail.com vai zvaniet +371 25 972 689.';
-  }
+  function dmy(iso) { return iso ? iso.split('-').reverse().join('.') : ''; }
   function onSent() {
-    var first = F('name').value.trim().split(' ')[0] || '', d = F('date').value;
+    var first = F('Kontaktpersona').value.trim().split(' ')[0] || '', d = F('Datums').value;
     $('#sent-name').textContent = ', ' + first;
-    $('#sent-date').textContent = ' ' + (d ? d.split('-').reverse().join('.') : '');
+    $('#sent-date').textContent = ' ' + dmy(d);
     form.hidden = true; sent.hidden = false;
     sent.focus({ preventScroll: true });
     anim(sent, [{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 520, easing: EASE });
