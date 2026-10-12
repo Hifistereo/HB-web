@@ -5,7 +5,9 @@ Static site for Henrix Band, served by GitHub Pages (Settings → Pages → Sour
 - `index.html`, `assets/` — the site (no build step; interactions and motion port the original component logic 1:1).
 - `_source/` — original Claude Design export, kept for reference. Jekyll skips `_` folders, so it is not published.
 
+## Enquiry form
+Submissions go through [FormSubmit](https://formsubmit.co) to henrixband@gmail.com (`action` on `<form id="enquiry">`; JS posts to the `/ajax/` endpoint, without JS the browser posts normally). The first submission triggers a one-time activation email — click "Activate Form" in it. `https://formsubmit.co` is allowed in the CSP `connect-src` / `form-action`.
+
 ## To finish
-- **Enquiry form**: set `action` on `<form id="enquiry">` in `index.html` to a Formspree / Web3Forms endpoint and add that origin to `connect-src` in the CSP meta tag.
 - **Analytics**: add the script and its origin to the CSP `script-src` / `connect-src`.
 - Update `lastmod` in `sitemap.xml` when content changes.
