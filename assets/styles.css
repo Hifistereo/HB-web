@@ -352,3 +352,6 @@ textarea.f-in{min-height:96px;resize:vertical}
 .faq-item h3{margin:0;font:600 clamp(20px,1.8vw,24px)/1.3 var(--font-display);text-transform:uppercase;color:var(--ink-50)}
 .faq-item summary:hover h3{color:var(--cyan)}
 .faq-item p{margin:0 0 22px;max-width:640px;font:300 18px/1.6 var(--font-body);color:var(--ink-100)}
+.foot-social{display:flex;gap:6px;margin-left:-11px}
+.foot-social a{display:grid;place-items:center;width:44px;height:44px;color:var(--ink-200);transition:color .2s var(--ease)}
+.foot-social a:hover{color:var(--cyan)}
