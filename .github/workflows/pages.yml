@@ -26,7 +26,8 @@ jobs:
         run: |
           mkdir _site
           rsync -a --exclude '.git' --exclude '.github' --exclude '_source' --exclude '_site' \
-            --exclude 'README.md' --exclude '_config.yml' ./ _site/
+            --exclude 'README.md' --exclude '_config.yml' \
+            --exclude 'CLAUDE.md' --exclude '.claude' --exclude 'tools' ./ _site/
           ls -la _site
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
