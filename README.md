@@ -3,6 +3,7 @@
 Static site for Henrix Band, served by GitHub Pages (Settings → Pages → Source: **GitHub Actions**; `.github/workflows/pages.yml` deploys every push to `main`) at https://henrix.lv (custom domain via `CNAME`).
 
 - `index.html`, `assets/` — the site (no build step; interactions and motion port the original component logic 1:1).
+- `en/index.html` — English version at https://henrix.lv/en/ (LV/EN switch in the header). It mirrors `index.html`: same section ids, JS hooks and form field names/values (enquiries arrive in the same format, marked `Valoda: EN`). **Make every content change in both files**; `tools/seo_check.py` fails on structural drift or untranslated Latvian text.
 - `_source/` — original Claude Design export, kept for reference. Jekyll skips `_` folders, so it is not published.
 
 ## Enquiry form
