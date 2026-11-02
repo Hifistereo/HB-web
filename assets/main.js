@@ -10,17 +10,25 @@
   var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
   var reduced = function () { return mq.matches; };
   var anim = function (el, kf, o) { if (el && el.animate && !reduced()) el.animate(kf, o); };
+  // en/index.html mirrors index.html; strings set from JS pick the page language
+  var EN = root.lang === 'en';
+  var T = function (lv, en) { return EN ? en : lv; };
 
   // ---- narrow / wide: root width < 980 (ResizeObserver, as in the original) ----
-  var narrow = false, menuOpen = false;
-  function setNarrow(n) {
+  // The header switches to the menu button earlier (< 1120) so the nav + LV/EN switch fit in one row.
+  var narrow = false, navNarrow = false, menuOpen = false;
+  function setNarrow(w) {
+    var n = w < 980, nn = w < 1120;
+    if (nn !== navNarrow) {
+      navNarrow = nn; root.classList.toggle('nav-narrow', nn);
+      if (!nn && menuOpen) setMenu(false);
+    }
     if (n === narrow) return;
     narrow = n; root.classList.toggle('narrow', n);
-    if (!n && menuOpen) setMenu(false);
   }
-  setNarrow(doc.body.clientWidth < 980);
-  if (window.ResizeObserver) new ResizeObserver(function (e) { setNarrow(e[0].contentRect.width < 980); }).observe(doc.body);
-  else window.addEventListener('resize', function () { setNarrow(doc.body.clientWidth < 980); });
+  setNarrow(doc.body.clientWidth);
+  if (window.ResizeObserver) new ResizeObserver(function (e) { setNarrow(e[0].contentRect.width); }).observe(doc.body);
+  else window.addEventListener('resize', function () { setNarrow(doc.body.clientWidth); });
 
   // ---- header / mobile menu ----
   var hdr = $('#hdr'), menu = $('#mob-menu'), menuBtn = $('.menu-btn');
@@ -29,18 +37,37 @@
 
   function setMenu(open) {
     menuOpen = open;
-    menu.hidden = !(open && narrow);
+    menu.hidden = !(open && navNarrow);
     menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    $('.menu-lbl', menuBtn).textContent = open ? 'Aizvērt' : 'Izvēlne';
+    $('.menu-lbl', menuBtn).textContent = open ? T('Aizvērt', 'Close') : T('Izvēlne', 'Menu');
     hdr.classList.toggle('menu-open', open);
     doc.body.style.overflow = open ? 'hidden' : '';
     if (open) $$('[data-menu-item]').forEach(function (el, i) {
       anim(el, [{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }], { duration: 520, delay: 40 + i * 50, easing: EASE, fill: 'backwards' });
     });
+    if (open && navNarrow) { var first = $('[data-menu-item]'); if (first) first.focus({ preventScroll: true }); }
   }
   menuBtn.addEventListener('click', function () { setMenu(!menuOpen); });
   $$('#mob-menu a, .brand').forEach(function (a) { a.addEventListener('click', function () { if (menuOpen) setMenu(false); }); });
-  window.addEventListener('keydown', function (e) { if (e.key === 'Escape' && menuOpen) setMenu(false); });
+  window.addEventListener('keydown', function (e) {
+    if (!menuOpen) return;
+    if (e.key === 'Escape') { setMenu(false); menuBtn.focus(); return; }
+    // aria-modal menu: keep Tab inside the header controls (brand, language, menu button) and the menu
+    if (e.key !== 'Tab' || menu.hidden) return;
+    var f = $$('a[href], button', hdr).concat($$('a[href], button', menu)).filter(function (el) { return el.offsetParent !== null; });
+    if (!f.length) return;
+    var i = f.indexOf(doc.activeElement);
+    if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+    else if (!e.shiftKey && (i === -1 || i === f.length - 1)) { e.preventDefault(); f[0].focus(); }
+  });
+
+  // ---- language switch: keep the current section (#id is the same on / and /en/) ----
+  $$('.lang a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      if (a.getAttribute('aria-current') || !location.hash) return;
+      a.href = a.getAttribute('href').split('#')[0] + location.hash;
+    });
+  });
 
   function scrollToId(id) {
     var el = doc.getElementById(id); if (!el) return;
@@ -95,9 +122,9 @@
       $$('.seg-toggle button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
       $$('.seg', timeline).forEach(function (s, i) {
         s.classList.toggle('off', i >= n);
-        $('.lbl', s).textContent = n === 3 ? '50 min' : (i + 1) + '. sets';
+        $('.lbl', s).textContent = n === 3 ? '50 min' : T((i + 1) + '. sets', 'Set ' + (i + 1));
       });
-      timeline.setAttribute('aria-label', n === 3 ? 'Programma: trīs seti pa 50 minūtēm' : 'Programma: četri īsāki seti');
+      timeline.setAttribute('aria-label', n === 3 ? T('Programma: trīs seti pa 50 minūtēm', 'Programme: three sets of 50 minutes') : T('Programma: četri īsāki seti', 'Programme: four shorter sets'));
     });
   });
 
@@ -121,7 +148,7 @@
   var YT = 'https://www.youtube-nocookie.com/embed/CZxHxjbiefg?autoplay=1&{m}loop=1&playlist=CZxHxjbiefg&controls=0&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&enablejsapi=1';
   function mountFrame(muted) {
     var f = doc.createElement('iframe');
-    f.title = 'Henrix Band dzīvajā — video';
+    f.title = T('Henrix Band dzīvajā — video', 'Henrix Band live — video');
     f.allow = 'autoplay; encrypted-media; picture-in-picture';
     f.tabIndex = -1;
     f.src = YT.replace('{m}', muted ? 'mute=1&' : '');
@@ -157,8 +184,8 @@
   function renderVid() {
     vid.classList.toggle('sound', V.sound);
     $('.disc', vid).innerHTML = V.sound ? '<span class="pause"><span></span><span></span></span>' : '<span class="tri"></span>';
-    $('.hint', vid).textContent = V.sound ? 'Izslēgt skaņu' : (V.inView || V.direct ? 'Ieslēgt skaņu' : 'Atskaņot');
-    vidBtn.setAttribute('aria-label', V.sound ? 'Izslēgt video skaņu' : 'Atskaņot Henrix Band video ar skaņu');
+    $('.hint', vid).textContent = V.sound ? T('Izslēgt skaņu', 'Sound off') : (V.inView || V.direct ? T('Ieslēgt skaņu', 'Sound on') : T('Atskaņot', 'Play'));
+    vidBtn.setAttribute('aria-label', V.sound ? T('Izslēgt video skaņu', 'Turn the video sound off') : T('Atskaņot Henrix Band video ar skaņu', 'Play the Henrix Band video with sound'));
     vidBtn.setAttribute('aria-pressed', V.sound ? 'true' : 'false');
   }
   function hover(on) { vid.classList.toggle('on', on && !reduced()); }
@@ -180,12 +207,13 @@
   var form = $('#enquiry'), sent = $('#sent'), status = $('#f-status'), errors = {};
   var F = function (n) { return form.elements[n]; };
   form.noValidate = true; // custom validation below; native checks stay on when JS is off
+  F('email').required = false; // without JS the e-mail is required; with JS e-mail OR phone is enough
   function validate() {
     var e = {}, email = F('email').value.trim(), phone = F('Tālrunis').value.trim();
-    if (!F('Datums').value) e.date = 'Norādiet pasākuma datumu.';
-    if (!F('Kontaktpersona').value.trim()) e.name = 'Norādiet savu vārdu.';
-    if (!email && !phone) e.contact = 'Norādiet e-pastu vai tālruni.';
-    else if (email && !/^\S+@\S+\.\S+$/.test(email)) e.contact = 'Pārbaudiet e-pasta adresi.';
+    if (!F('Datums').value) e.date = T('Norādiet pasākuma datumu.', 'Please enter the event date.');
+    if (!F('Kontaktpersona').value.trim()) e.name = T('Norādiet savu vārdu.', 'Please enter your name.');
+    if (!email && !phone) e.contact = T('Norādiet e-pastu vai tālruni.', 'Please enter an e-mail or phone number.');
+    else if (email && !/^\S+@\S+\.\S+$/.test(email)) e.contact = T('Pārbaudiet e-pasta adresi.', 'Please check the e-mail address.');
     return e;
   }
   function showErrors() {
@@ -214,19 +242,19 @@
     var btn = $('button[type=submit]', form); btn.disabled = true;
     var data = new FormData(form), d = dmy(F('Datums').value);
     data.set('Datums', d);
-    data.set('_subject', 'Henrix Band — jauns pasākuma pieprasījums (' + d + ')');
+    data.set('_subject', 'Henrix Band — jauns pasākuma pieprasījums (' + d + (EN ? ', EN' : '') + ')');
     // only an explicit success counts: FormSubmit can answer 200 with success "false" (e.g. before activation)
     fetch(form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), { method: 'POST', body: data, headers: { Accept: 'application/json' } })
       .then(function (r) { return r.json(); })
       .then(function (j) { if (!j || (j.success !== true && j.success !== 'true')) throw new Error('not sent'); onSent(); })
-      .catch(function () { status.textContent = 'Neizdevās nosūtīt. Lūdzu, mēģiniet vēlreiz vai sazinieties ar mums tieši: henrixband@gmail.com, +371 25 972 689.'; })
+      .catch(function () { status.textContent = T('Neizdevās nosūtīt. Lūdzu, mēģiniet vēlreiz vai sazinieties ar mums tieši: henrixband@gmail.com, +371 25 972 689.', 'Sending failed. Please try again or contact us directly: henrixband@gmail.com, +371 25 972 689.'); })
       .then(function () { btn.disabled = false; });
   });
   function dmy(iso) { return iso ? iso.split('-').reverse().join('.') : ''; }
   function onSent() {
     var first = F('Kontaktpersona').value.trim().split(' ')[0] || '', d = F('Datums').value;
     $('#sent-name').textContent = ', ' + first;
-    $('#sent-date').textContent = ' ' + dmy(d);
+    $('#sent-date').textContent = (EN ? ' for ' : ' ') + dmy(d);
     form.hidden = true; sent.hidden = false;
     sent.focus({ preventScroll: true });
     anim(sent, [{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 520, easing: EASE });

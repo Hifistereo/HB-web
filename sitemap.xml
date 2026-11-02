@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://henrix.lv/</loc>
-    <lastmod>2026-10-17</lastmod>
+    <lastmod>2026-11-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="lv" href="https://henrix.lv/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://henrix.lv/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://henrix.lv/"/>
+    <image:image><image:loc>https://henrix.lv/assets/img/band-stage-1502.webp</image:loc></image:image>
+    <image:image><image:loc>https://henrix.lv/assets/img/singer-live-1600.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://henrix.lv/en/</loc>
+    <lastmod>2026-11-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="lv" href="https://henrix.lv/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://henrix.lv/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://henrix.lv/"/>
     <image:image><image:loc>https://henrix.lv/assets/img/band-stage-1502.webp</image:loc></image:image>
     <image:image><image:loc>https://henrix.lv/assets/img/singer-live-1600.webp</image:loc></image:image>
   </url>
