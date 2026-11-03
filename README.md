@@ -13,3 +13,4 @@ Submissions go through [FormSubmit](https://formsubmit.co) to henrixband@gmail.c
 ## To finish
 - **Analytics**: add the script and its origin to the CSP `script-src` / `connect-src`.
 - Update `lastmod` in `sitemap.xml` when content changes.
+- After changing `assets/*.css` or `assets/*.js`, bump the `?v=` on their `<link>`/`<script>` tags (index.html, en/index.html, 404.html, alternative/index.html) so browsers drop the cached copy.
