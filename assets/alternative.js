@@ -1,9 +1,9 @@
-/* Henrix Rock — booking form (FormSubmit). Same pattern as main.js: without JS the form posts normally. */
+/* Henrix Alternative — booking form (FormSubmit). Same pattern as main.js: without JS the form posts normally. */
 (function () {
   'use strict';
-  var form = document.getElementById('rock-form');
+  var form = document.getElementById('alt-form');
   if (!form || !window.fetch || !window.FormData) return;
-  var sent = document.getElementById('rock-sent'), status = document.getElementById('rock-status');
+  var sent = document.getElementById('alt-sent'), status = document.getElementById('alt-status');
   var F = function (n) { return form.elements[n]; };
   var FAIL = 'Neizdevās nosūtīt. Lūdzu, mēģiniet vēlreiz vai sazinieties ar mums tieši: henrixband@gmail.com, +371 25 972 689.';
   var errors = {};
@@ -51,7 +51,7 @@
     var btn = form.querySelector('button[type=submit]'); btn.disabled = true;
     var data = new FormData(form), d = dmy(F('Datums').value);
     data.set('Datums', d);
-    data.set('_subject', 'Henrix Rock — jauns pieprasījums (' + d + ')');
+    data.set('_subject', 'Henrix Alternative — jauns pieprasījums (' + d + ')');
     // only an explicit success counts: FormSubmit can answer 200 with success "false" (e.g. before activation)
     fetch(form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), { method: 'POST', body: data, headers: { Accept: 'application/json' } })
       .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
@@ -63,7 +63,7 @@
       .then(function () { btn.disabled = false; });
   });
 
-  document.getElementById('rock-reset').addEventListener('click', function () {
+  document.getElementById('alt-reset').addEventListener('click', function () {
     form.reset(); errors = {}; showErrors(); status.textContent = '';
     sent.hidden = true; form.hidden = false; F('Kontaktpersona').focus();
   });

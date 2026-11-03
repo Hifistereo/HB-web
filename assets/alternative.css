@@ -1,4 +1,4 @@
-/* Henrix Rock — henrix.lv/rock/. Port of Claude Design direction 1a "Sarkanā gaisma". Fonts shared with styles.css. */
+/* Henrix Alternative — henrix.lv/alternative/. Port of Claude Design direction 1a "Sarkanā gaisma". Fonts shared with styles.css. */
 @font-face{font-family:'Barlow';font-style:normal;font-weight:300;font-display:swap;src:url('fonts/Barlow-300-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
 @font-face{font-family:'Barlow';font-style:normal;font-weight:300;font-display:swap;src:url('fonts/Barlow-300-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
 @font-face{font-family:'Barlow';font-style:normal;font-weight:700;font-display:swap;src:url('fonts/Barlow-700-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
@@ -51,20 +51,20 @@ p,h1,h2,h3,ol{margin:0}
 .r-brand.band span{color:inherit}
 .r-brand.band{color:var(--r-body);font-size:22px}
 .r-brand.band:hover{color:var(--r-bone)}
-.r-brand.rock:hover{color:var(--r-bone)}
+.r-brand.alt:hover{color:var(--r-bone)}
 .brands .r-brand+.r-brand{padding-left:18px;border-left:1px solid var(--r-line)}
 .r-nav{display:flex;gap:36px;align-items:center}
 .r-nav-link{font:600 15px/1 var(--font-display);letter-spacing:.16em;text-transform:uppercase;color:var(--r-bone);text-decoration:none;padding:10px 0}
 @media (max-width:860px){.r-nav-link{display:none}}
-@media (max-width:520px){.r-header{height:72px;gap:12px}.brands{gap:12px}.brands .r-brand+.r-brand{padding-left:12px}.r-brand{font-size:22px}.r-brand.band{font-size:17px}}
-@media (max-width:400px){.r-header .r-btn{display:none}}
+@media (max-width:640px){.r-header{height:72px;gap:12px}.brands{gap:10px}.brands .r-brand+.r-brand{padding-left:10px}.r-brand{font-size:clamp(16px,5.4vw,24px);letter-spacing:.05em}.r-brand.band{font-size:clamp(13px,4.2vw,18px)}}
+@media (max-width:560px){.r-header .r-btn{display:none}}
 
 /* hero */
 .r-hero{position:relative;height:clamp(680px,100svh,860px);display:flex;align-items:flex-end;overflow:hidden}
 .r-hero-img{position:absolute;right:0;top:0;width:68%;height:100%;object-fit:cover;object-position:50% 30%}
 .r-hero-shade{position:absolute;inset:0;background:linear-gradient(90deg,var(--r-black) 32%,rgba(11,9,9,.75) 48%,rgba(11,9,9,0) 70%),linear-gradient(0deg,var(--r-black) 0%,rgba(11,9,9,0) 30%)}
 .r-hero-body{position:relative;padding:0 var(--px) 88px;max-width:calc(760px + var(--px));display:flex;flex-direction:column;gap:28px}
-.r-h1{font:600 clamp(84px,13.75vw,176px)/.82 var(--font-display);letter-spacing:-.01em;text-transform:uppercase;color:var(--r-bone)}
+.r-h1{font:600 clamp(58px,10vw,128px)/.86 var(--font-display);letter-spacing:-.01em;text-transform:uppercase;color:var(--r-bone)}
 .r-h1 span{color:var(--r-red)}
 .r-tagline{font:600 clamp(28px,3.1vw,40px)/1.05 var(--font-display);text-transform:uppercase;color:var(--r-bone);text-wrap:balance}
 .r-lead{max-width:520px;font-size:19px;text-wrap:pretty}
