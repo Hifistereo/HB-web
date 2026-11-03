@@ -1,4 +1,41 @@
-/* Henrix Alternative — booking form (FormSubmit). Same pattern as main.js: without JS the form posts normally. */
+/* Henrix Alternative — header (scrolled state + mobile menu, same behaviour as main.js) and booking form. */
+document.documentElement.classList.add('js');
+(function () {
+  'use strict';
+  var hdr = document.getElementById('hdr'), menu = document.getElementById('alt-menu');
+  var btn = hdr && hdr.querySelector('.menu-btn');
+  if (!hdr || !menu || !btn) return;
+  var lbl = btn.querySelector('.menu-lbl'), open = false;
+  var mq = window.matchMedia('(max-width: 860px)');
+  function all(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+  function setMenu(o) {
+    open = o && mq.matches;
+    menu.hidden = !open;
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    lbl.textContent = open ? 'Aizvērt' : 'Izvēlne';
+    hdr.classList.toggle('menu-open', open);
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+    if (open) { var first = menu.querySelector('[data-menu-item]'); if (first) first.focus({ preventScroll: true }); }
+  }
+  btn.addEventListener('click', function () { setMenu(!open); });
+  all('a', menu).concat(all('.brand', hdr)).forEach(function (a) { a.addEventListener('click', function () { if (open) setMenu(false); }); });
+  window.addEventListener('keydown', function (e) {
+    if (!open) return;
+    if (e.key === 'Escape') { setMenu(false); btn.focus(); return; }
+    if (e.key !== 'Tab') return;
+    // aria-modal menu: keep Tab inside the header controls and the menu
+    var f = all('a[href], button', hdr).concat(all('a[href], button', menu)).filter(function (el) { return el.offsetParent !== null; });
+    var i = f.indexOf(document.activeElement);
+    if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+    else if (!e.shiftKey && (i === -1 || i === f.length - 1)) { e.preventDefault(); f[0].focus(); }
+  });
+  (mq.addEventListener ? mq.addEventListener.bind(mq, 'change') : mq.addListener.bind(mq))(function () { if (!mq.matches && open) setMenu(false); });
+  var sc = null;
+  function onScroll() { var s = window.scrollY > 8; if (s !== sc) { sc = s; hdr.classList.toggle('scrolled', s); } }
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+})();
+
+/* booking form (FormSubmit). Same pattern as main.js: without JS the form posts normally. */
 (function () {
   'use strict';
   var form = document.getElementById('alt-form');

@@ -27,8 +27,8 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" as="image" href="/assets/img/alt-hero-663.webp" imagesrcset="/assets/img/alt-hero-420.webp 420w, /assets/img/alt-hero-663.webp 663w" imagesizes="(max-width: 860px) 100vw, 68vw" fetchpriority="high">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/BarlowCondensed-600-latin.woff2" crossorigin>
-<link rel="stylesheet" href="/assets/alternative.css?v=20261103b">
-<script src="/assets/alternative.js?v=20261103b" defer></script>
+<link rel="stylesheet" href="/assets/alternative.css?v=20261103d">
+<script src="/assets/alternative.js?v=20261103d" defer></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -63,17 +63,30 @@
 <body>
 <a class="skip" href="#saturs">Pāriet uz saturu</a>
 
-<header class="r-header">
-  <div class="brands">
-    <a class="r-brand band" href="/" hreflang="lv">Henrix <span>Band</span></a>
-    <a class="r-brand alt" href="/alternative/" aria-current="page">Henri<span class="x">x</span> <span class="alt">Alternative</span></a>
+<header class="site-header" id="hdr">
+  <div class="bar">
+    <div class="brands">
+      <a class="brand" href="/" hreflang="lv" aria-label="Henrix Band — galvenā lapa"><span class="wordmark">Henri<span class="x">x</span> Band</span></a><a class="brand brand-alt" href="/alternative/" aria-current="page"><span class="wordmark">Henri<span class="x">x</span> <span class="alt">Alternative</span></span></a>
+    </div>
+    <nav class="r-nav" aria-label="Henrix Alternative navigācija">
+      <a class="r-nav-link" href="#kapec">Kāpēc mēs</a>
+      <a class="r-nav-link" href="#setlist">Setlist</a>
+      <a class="r-btn sm" href="#rezervet">Rezervēt</a>
+    </nav>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="alt-menu"><span class="menu-lbl">Izvēlne</span><span class="burger" aria-hidden="true"><span></span><span></span></span></button>
   </div>
-  <nav class="r-nav" aria-label="Henrix Alternative navigācija">
-    <a class="r-nav-link" href="#kapec">Kāpēc mēs</a>
-    <a class="r-nav-link" href="#setlist">Setlist</a>
-    <a class="r-btn sm" href="#rezervet">Rezervēt</a>
-  </nav>
 </header>
+
+<div class="mob-menu" id="alt-menu" role="dialog" aria-modal="true" aria-label="Izvēlne" hidden>
+  <nav aria-label="Mobilā navigācija">
+    <a data-menu-item href="#kapec"><span>01</span>Kāpēc mēs</a>
+    <a data-menu-item href="#setlist"><span>02</span>Setlist</a>
+    <a data-menu-item href="#kur"><span>03</span>Kur spēlējam</a>
+    <a data-menu-item href="#rezervet"><span>04</span>Rezervēt</a>
+  </nav>
+  <a class="mob-band" href="/" hreflang="lv">Henri<span>x</span> Band →</a>
+  <a class="r-btn" href="#rezervet">Rezervēt datumu</a>
+</div>
 
 <main id="saturs">
 <section class="r-hero" aria-labelledby="r-h1">
@@ -146,7 +159,7 @@
   </ol>
 </section>
 
-<section class="r-venues" aria-labelledby="venues-h">
+<section id="kur" class="r-venues" aria-labelledby="venues-h">
   <img src="/assets/img/alt-crowd-1080.webp" srcset="/assets/img/alt-crowd-720.webp 720w, /assets/img/alt-crowd-1080.webp 1080w" sizes="100vw" width="1080" height="720" alt="Pilna zāle Henrix koncertā" loading="lazy" decoding="async">
   <div class="r-venues-body">
     <h2 id="venues-h" class="r-h2 md">Kur mēs spēlējam</h2>
