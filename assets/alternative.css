@@ -27,6 +27,7 @@ input,select,textarea,button{font:inherit}
 img{max-width:100%;display:block}
 p,h1,h2,h3,ol{margin:0}
 [hidden]{display:none!important}
+section[id]{scroll-margin-top:72px}
 .skip{position:absolute;left:16px;top:-60px;z-index:100;background:var(--r-red);color:var(--r-black);padding:12px 18px;font:700 14px var(--font-body);text-decoration:none}
 .skip:focus{top:12px}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
@@ -43,21 +44,46 @@ p,h1,h2,h3,ol{margin:0}
 .r-btn.sm{font-size:15px;letter-spacing:.16em;padding:12px 18px}
 .r-btn:disabled{opacity:.6;cursor:progress}
 
-/* header (sits over the hero, as in the design) */
-.r-header{position:absolute;z-index:5;left:0;right:0;top:0;height:84px;padding:0 var(--px);display:flex;align-items:center;justify-content:space-between;gap:24px}
-.brands{display:flex;align-items:center;gap:18px}
-.r-brand{font:600 28px/1 var(--font-display);letter-spacing:.08em;text-transform:uppercase;color:var(--r-bone);text-decoration:none;white-space:nowrap;transition:color .18s var(--ease)}
-.r-brand span{color:var(--r-red)}
-.r-brand.band span{color:inherit}
-.r-brand.band{color:var(--r-body);font-size:22px}
-.r-brand.band:hover{color:var(--r-bone)}
-.r-brand.alt:hover{color:var(--r-bone)}
-.brands .r-brand+.r-brand{padding-left:18px;border-left:1px solid var(--r-line)}
+/* header — same metrics as the main site header (styles.css .site-header/.brands/.menu-btn/.mob-menu) */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,9,9,0);border-bottom:1px solid rgba(46,38,38,0);transition:background 220ms var(--ease),border-color 220ms var(--ease)}
+.site-header.scrolled{background:var(--r-black);border-bottom-color:var(--r-rule)}
+.site-header.menu-open{background:var(--r-black);border-bottom-color:rgba(46,38,38,0)}
+.site-header .bar{max-width:1440px;margin:0 auto;padding:0 clamp(20px,5vw,72px);height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brands{display:flex;align-items:center;flex:none;margin-right:auto}
+.brand{text-decoration:none;display:flex;flex:none}
+.wordmark{font:600 26px/.95 var(--font-display);letter-spacing:.04em;color:#F2F1F8;text-transform:uppercase;white-space:nowrap}
+.wordmark .x{background:linear-gradient(180deg,#46A6EC 0%,#6260F8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand-alt{position:relative;margin-left:18px;padding-left:18px;border-left:1px solid #3A3950}
+.brand-alt .x{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--r-red)}
+.brand-alt .alt{color:var(--r-red);transition:text-shadow 220ms var(--ease)}
+.brand-alt::after{content:"";position:absolute;left:18px;right:0;bottom:-6px;height:2px;background:var(--r-red);transform:scaleX(0);transform-origin:left;transition:transform 220ms var(--ease)}
+.brand-alt:hover::after,.brand-alt:focus-visible::after,.brand-alt[aria-current]::after{transform:scaleX(1)}
+.brand-alt:hover .alt,.brand-alt:focus-visible .alt{text-shadow:0 0 14px rgba(240,40,30,.65)}
+.brand:hover{color:inherit}
+@media (max-width:767px){.site-header .bar{gap:12px}.brands .wordmark{font-size:clamp(15px,4.8vw,22px);letter-spacing:.02em}.brand-alt{margin-left:9px;padding-left:9px}.brand-alt::after{left:9px;bottom:-4px}}
 .r-nav{display:flex;gap:36px;align-items:center}
 .r-nav-link{font:600 15px/1 var(--font-display);letter-spacing:.16em;text-transform:uppercase;color:var(--r-bone);text-decoration:none;padding:10px 0}
-@media (max-width:860px){.r-nav-link{display:none}}
-@media (max-width:640px){.r-header{height:72px;gap:12px}.brands{gap:10px}.brands .r-brand+.r-brand{padding-left:10px}.r-brand{font-size:clamp(16px,5.4vw,24px);letter-spacing:.05em}.r-brand.band{font-size:clamp(13px,4.2vw,18px)}}
-@media (max-width:560px){.r-header .r-btn{display:none}}
+@media (max-width:860px){.r-nav-link{display:none}html.js .r-nav{display:none}}
+@media (max-width:560px){.r-nav{display:none}}
+.menu-btn{display:none;background:transparent;border:1px solid #4A3E3E;color:var(--r-bone);height:44px;padding:0 16px;align-items:center;gap:10px;font:700 12px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+@media (max-width:860px){html.js .menu-btn{display:flex}}
+@media (max-width:767px){.menu-btn .menu-lbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.menu-btn{width:44px;justify-content:center;padding:0}}
+.burger{display:flex;flex-direction:column;gap:5px;width:18px}
+.burger span{height:1.5px;background:var(--r-bone);transition:transform 220ms var(--ease)}
+.menu-btn[aria-expanded=true] .burger span:first-child{transform:translateY(3.25px) rotate(45deg)}
+.menu-btn[aria-expanded=true] .burger span:last-child{transform:translateY(-3.25px) rotate(-45deg)}
+.mob-menu{position:fixed;inset:0;z-index:45;background:#070505;padding:112px clamp(20px,5vw,72px) 40px;display:flex;flex-direction:column;justify-content:space-between;overflow:auto}
+.mob-menu nav{display:flex;flex-direction:column}
+.mob-menu nav a{display:flex;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid var(--r-rule);text-decoration:none;color:var(--r-bone);font:600 44px/1 var(--font-display);text-transform:uppercase}
+.mob-menu nav a span{font:500 15px/1 var(--font-display);color:var(--r-red);width:24px}
+.mob-menu .mob-band{align-self:flex-start;margin-top:28px;font:600 28px/1 var(--font-display);letter-spacing:.06em;text-transform:uppercase;color:#F2F1F8;text-decoration:none;padding:8px 0;border-bottom:2px solid #46A6EC}
+.mob-menu .mob-band span{background:linear-gradient(180deg,#46A6EC 0%,#6260F8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.mob-menu .r-btn{margin-top:40px;min-height:56px}
+
+/* footer wordmark */
+.r-brand{font:600 28px/1 var(--font-display);letter-spacing:.08em;text-transform:uppercase;color:var(--r-bone);text-decoration:none;white-space:nowrap}
+.r-brand span{color:var(--r-red)}
+.r-brand:hover{color:var(--r-bone)}
 
 /* hero */
 .r-hero{position:relative;height:clamp(680px,100svh,860px);display:flex;align-items:flex-end;overflow:hidden}
