@@ -85,7 +85,9 @@ class Page(HTMLParser):
 
 
 # indexable pages: path -> (canonical URL, <html lang>)
-PAGES = {"index.html": (SITE, "lv"), "en/index.html": (SITE + "en/", "en")}
+PAGES = {"index.html": (SITE, "lv"), "en/index.html": (SITE + "en/", "en"), "rock/index.html": (SITE + "rock/", "lv")}
+# LV-only pages: no hreflang alternates (there is no /en/ twin), own JSON-LD types
+SINGLE = {"rock/index.html": ("WebPage", "Service")}
 HREFLANG = {"lv": SITE, "en": SITE + "en/", "x-default": SITE}
 
 
@@ -118,7 +120,10 @@ def check_page(path):
     if canon != [want_canon]:
         errors.append(f"{name}: canonical should be exactly {want_canon}, got {canon}")
     alts = {l.get("hreflang"): l.get("href") for l in p.links if l.get("rel") == "alternate" and l.get("hreflang")}
-    if alts != HREFLANG:
+    if name in SINGLE:
+        if alts:
+            errors.append(f"{name}: LV-only page should have no hreflang alternates, got {alts}")
+    elif alts != HREFLANG:
         errors.append(f"{name}: hreflang alternates should be {HREFLANG}, got {alts}")
     if p.meta.get("og:url") != want_canon:
         errors.append(f"{name}: og:url should be {want_canon}")
@@ -151,10 +156,10 @@ def check_page(path):
             errors.append(f"{name}: JSON-LD does not parse: {e}")
             continue
         types = {n.get("@type") for n in data.get("@graph", [data])}
-        for want in ("WebSite", "MusicGroup"):
+        for want in SINGLE.get(name, ("WebSite", "MusicGroup")):
             if want not in types:
                 warnings.append(f"{name}: JSON-LD has no {want}")
-        if "FAQPage" not in types:
+        if name not in SINGLE and "FAQPage" not in types:
             warnings.append(f"{name}: no FAQPage JSON-LD (helps AI answers / rich results)")
 
     csp = p.meta.get("content-security-policy", "")
@@ -186,7 +191,7 @@ def check_files():
             errors.append(f"sitemap.xml: image missing on disk: {rel}")
     try:
         changed = subprocess.run(
-            ["git", "-C", str(ROOT), "log", "-1", "--format=%cs", "--", "index.html", "en/index.html", "llms.txt"],
+            ["git", "-C", str(ROOT), "log", "-1", "--format=%cs", "--", "index.html", "en/index.html", "rock/index.html", "llms.txt"],
             capture_output=True, text=True, check=True).stdout.strip()
         if changed and lastmod and lastmod < changed:
             warnings.append(f"sitemap.xml: lastmod {lastmod} is older than last content change {changed}")
@@ -226,7 +231,7 @@ def check_parity(lv, en):
 
 
 pages = {}
-for f in ("index.html", "en/index.html", "404.html"):
+for f in ("index.html", "en/index.html", "rock/index.html", "404.html"):
     if (ROOT / f).exists():
         pages[f] = check_page(ROOT / f)
     elif f in PAGES:
