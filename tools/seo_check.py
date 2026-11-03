@@ -130,6 +130,7 @@ def check_page(path):
     for ref in p.refs:
         if ref.startswith(("http", "#", "mailto:", "tel:", "data:", "//")):
             continue
+        ref = ref.split("?")[0].split("#")[0]  # cache-busting ?v= and fragments are not part of the file path
         local = (ROOT / ref.lstrip("/")) if ref.startswith("/") else (path.parent / ref)
         if not local.resolve().exists():
             errors.append(f"{name}: local reference not found: {ref}")
