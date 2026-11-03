@@ -4,7 +4,7 @@ Static site for Henrix Band, served by GitHub Pages (Settings → Pages → Sour
 
 - `index.html`, `assets/` — the site (no build step; interactions and motion port the original component logic 1:1).
 - `en/index.html` — English version at https://henrix.lv/en/ (LV/EN switch in the header). It mirrors `index.html`: same section ids, JS hooks and form field names/values (enquiries arrive in the same format, marked `Valoda: EN`). **Make every content change in both files**; `tools/seo_check.py` fails on structural drift or untranslated Latvian text.
-- `rock/index.html`, `assets/rock.css`, `assets/rock.js` — **Henrix Rock** page at https://henrix.lv/rock/ (LV only; port of Claude Design direction 1a). Linked from the "Henrix Rock" wordmark in the main header and mobile menu (LV + EN). Its form uses the same FormSubmit address, marked `Programma: Henrix Rock`.
+- `alternative/index.html`, `assets/alternative.css`, `assets/alternative.js` — **Henrix Alternative** page at https://henrix.lv/alternative/ (`/rock/` redirects there) (LV only; port of Claude Design direction 1a). Linked from the "Henrix Alternative" wordmark in the main header and mobile menu (LV + EN). Its form uses the same FormSubmit address, marked `Programma: Henrix Alternative`.
 - `_source/` — original Claude Design export, kept for reference. Jekyll skips `_` folders, so it is not published.
 
 ## Enquiry form

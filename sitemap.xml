@@ -19,9 +19,9 @@
     <image:image><image:loc>https://henrix.lv/assets/img/singer-live-1600.webp</image:loc></image:image>
   </url>
   <url>
-    <loc>https://henrix.lv/rock/</loc>
+    <loc>https://henrix.lv/alternative/</loc>
     <lastmod>2026-11-03</lastmod>
-    <image:image><image:loc>https://henrix.lv/assets/img/rock-hero-663.webp</image:loc></image:image>
-    <image:image><image:loc>https://henrix.lv/assets/img/rock-crowd-1080.webp</image:loc></image:image>
+    <image:image><image:loc>https://henrix.lv/assets/img/alt-hero-663.webp</image:loc></image:image>
+    <image:image><image:loc>https://henrix.lv/assets/img/alt-crowd-1080.webp</image:loc></image:image>
   </url>
 </urlset>

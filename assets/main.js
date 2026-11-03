@@ -18,7 +18,7 @@
   // The header switches to the menu button earlier (< 1120) so the nav + LV/EN switch fit in one row.
   var narrow = false, navNarrow = false, menuOpen = false;
   function setNarrow(w) {
-    var n = w < 980, nn = w < 1280;
+    var n = w < 980, nn = w < 1360;
     if (nn !== navNarrow) {
       navNarrow = nn; root.classList.toggle('nav-narrow', nn);
       if (!nn && menuOpen) setMenu(false);

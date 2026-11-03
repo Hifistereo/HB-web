@@ -85,9 +85,9 @@ class Page(HTMLParser):
 
 
 # indexable pages: path -> (canonical URL, <html lang>)
-PAGES = {"index.html": (SITE, "lv"), "en/index.html": (SITE + "en/", "en"), "rock/index.html": (SITE + "rock/", "lv")}
+PAGES = {"index.html": (SITE, "lv"), "en/index.html": (SITE + "en/", "en"), "alternative/index.html": (SITE + "alternative/", "lv")}
 # LV-only pages: no hreflang alternates (there is no /en/ twin), own JSON-LD types
-SINGLE = {"rock/index.html": ("WebPage", "Service")}
+SINGLE = {"alternative/index.html": ("WebPage", "Service")}
 HREFLANG = {"lv": SITE, "en": SITE + "en/", "x-default": SITE}
 
 
@@ -191,7 +191,7 @@ def check_files():
             errors.append(f"sitemap.xml: image missing on disk: {rel}")
     try:
         changed = subprocess.run(
-            ["git", "-C", str(ROOT), "log", "-1", "--format=%cs", "--", "index.html", "en/index.html", "rock/index.html", "llms.txt"],
+            ["git", "-C", str(ROOT), "log", "-1", "--format=%cs", "--", "index.html", "en/index.html", "alternative/index.html", "llms.txt"],
             capture_output=True, text=True, check=True).stdout.strip()
         if changed and lastmod and lastmod < changed:
             warnings.append(f"sitemap.xml: lastmod {lastmod} is older than last content change {changed}")
@@ -231,7 +231,7 @@ def check_parity(lv, en):
 
 
 pages = {}
-for f in ("index.html", "en/index.html", "rock/index.html", "404.html"):
+for f in ("index.html", "en/index.html", "alternative/index.html", "404.html"):
     if (ROOT / f).exists():
         pages[f] = check_page(ROOT / f)
     elif f in PAGES:
