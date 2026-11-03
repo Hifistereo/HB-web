@@ -87,17 +87,24 @@ section[id]{scroll-margin-top:72px}
 
 /* hero */
 .r-hero{position:relative;height:clamp(680px,100svh,860px);display:flex;align-items:flex-end;overflow:hidden}
-.r-hero-img{position:absolute;right:0;top:0;width:68%;height:100%;object-fit:cover;object-position:50% 30%}
+.r-hero-media{position:absolute;right:0;top:0;width:68%;height:100%;overflow:hidden}
+.r-hero-media .px{position:absolute;left:0;right:0;top:0;height:112%;will-change:transform}
+.r-hero-img{width:100%;height:100%;object-fit:cover;object-position:50% 30%}
+.hero-light{position:absolute;left:0;top:0;width:900px;height:900px;margin:-450px 0 0 -450px;pointer-events:none;border-radius:50%;background:radial-gradient(circle,rgba(240,40,30,.2) 0%,rgba(240,40,30,.08) 35%,rgba(11,9,9,0) 65%);mix-blend-mode:screen;opacity:0;transition:opacity 400ms var(--ease)}
 .r-hero-shade{position:absolute;inset:0;background:linear-gradient(90deg,var(--r-black) 32%,rgba(11,9,9,.75) 48%,rgba(11,9,9,0) 70%),linear-gradient(0deg,var(--r-black) 0%,rgba(11,9,9,0) 30%)}
 .r-hero-body{position:relative;padding:0 var(--px) 88px;max-width:calc(760px + var(--px));display:flex;flex-direction:column;gap:28px}
 .r-h1{font:600 clamp(58px,10vw,128px)/.86 var(--font-display);letter-spacing:-.01em;text-transform:uppercase;color:var(--r-bone)}
-.r-h1 span{color:var(--r-red)}
+.r-h1 .x,.r-h1 .alt{color:var(--r-red)}
+.r-h1 .ln{display:block;overflow:hidden;padding-top:.1em;margin-top:-.1em}
+.r-h1 .ln+.ln{margin-top:-.04em}
+.r-h1 .ln>span{display:block}
 .r-tagline{font:600 clamp(28px,3.1vw,40px)/1.05 var(--font-display);text-transform:uppercase;color:var(--r-bone);text-wrap:balance}
 .r-lead{max-width:520px;font-size:19px;text-wrap:pretty}
 .r-ctas{display:flex;flex-wrap:wrap;gap:16px;margin-top:8px}
 @media (max-width:860px){
   .r-hero{height:auto;display:block;padding-top:0}
-  .r-hero-img{position:relative;width:100%;height:auto;aspect-ratio:663/705;max-height:78svh;object-position:50% 25%}
+  .r-hero-media{position:relative;width:100%;height:auto;aspect-ratio:663/705;max-height:78svh}
+  .r-hero-img{object-position:50% 25%}
   .r-hero-shade{inset:0 0 auto 0;width:100%;aspect-ratio:663/705;max-height:78svh;background:linear-gradient(0deg,var(--r-black) 0%,rgba(11,9,9,.92) 22%,rgba(11,9,9,0) 55%),linear-gradient(180deg,rgba(11,9,9,.7) 0%,rgba(11,9,9,0) 22%)}
   .r-hero-body{margin-top:-30vw;padding-bottom:64px;gap:22px}
   .r-lead{font-size:17px}
@@ -123,7 +130,8 @@ section[id]{scroll-margin-top:72px}
 @media (max-width:860px){.r-why{grid-template-columns:1fr;gap:40px;padding-top:88px;padding-bottom:80px}.r-reason{grid-template-columns:56px 1fr}.r-reason .n{font-size:32px}}
 
 /* photo band */
-.r-photo{position:relative;height:clamp(300px,44vw,560px)}
+.r-photo{position:relative;height:clamp(300px,44vw,560px);overflow:hidden}
+.r-photo .px{position:absolute;left:0;right:0;top:-10%;height:120%;will-change:transform}
 .r-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 60%}
 .r-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,var(--r-black) 0%,rgba(11,9,9,0) 45%),linear-gradient(180deg,var(--r-black) 0%,rgba(11,9,9,0) 20%)}
 
@@ -143,7 +151,8 @@ section[id]{scroll-margin-top:72px}
 
 /* venues */
 .r-venues{position:relative;padding:120px var(--px);overflow:hidden}
-.r-venues>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.r-venues>.px{position:absolute;left:0;right:0;top:-10%;height:120%;will-change:transform}
+.r-venues>.px img{width:100%;height:100%;object-fit:cover}
 .r-venues::before{content:"";position:absolute;inset:0;z-index:1;background:rgba(11,9,9,.55)}
 .r-venues-body{position:relative;z-index:2;display:flex;flex-direction:column;gap:40px}
 .r-venue-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
@@ -191,3 +200,21 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.85)}
 .r-footer p a{font-weight:700}
 .r-foot-meta{width:100%;display:flex;flex-wrap:wrap;gap:8px 24px;font-size:14px;color:#8A807A}
 .r-foot-meta a{color:var(--r-body)}
+
+/* motion — same as the main site (styles.css): JS adds .js on <html>; content is visible without it */
+.r-why .w{transition:opacity 260ms linear}
+@media (prefers-reduced-motion:no-preference){
+  .js [data-reveal].pre{opacity:0;transform:translateY(28px)}
+  .js [data-reveal].in{transition:opacity 800ms var(--ease),transform 800ms var(--ease);opacity:1;transform:none}
+  .r-songs li[data-reveal].in{transition:opacity 800ms var(--ease),transform 800ms var(--ease),background .18s var(--ease)}
+  @keyframes hb-line{from{transform:translateY(104%)}to{transform:none}}
+  @keyframes hb-fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes hb-zoom{from{transform:scale(1.08);opacity:.2}to{transform:scale(1);opacity:1}}
+  .r-h1 .ln>span{animation:hb-line 1100ms var(--ease) backwards}
+  .r-h1 .ln:first-child>span{animation-delay:120ms}
+  .r-h1 .ln+.ln>span{animation-delay:240ms}
+  .r-hero [data-hero-fade]{animation:hb-fade 900ms var(--ease) backwards}
+  .r-hero [data-hero-fade="1"]{animation-delay:520ms}.r-hero [data-hero-fade="2"]{animation-delay:610ms}
+  .r-hero [data-hero-fade="3"]{animation-delay:700ms}.r-hero [data-hero-fade="4"]{animation-delay:790ms}
+  .r-hero-img{animation:hb-zoom 1800ms var(--ease) backwards}
+}
