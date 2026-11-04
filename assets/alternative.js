@@ -5,6 +5,7 @@ document.documentElement.classList.add('js');
   var hdr = document.getElementById('hdr'), menu = document.getElementById('alt-menu');
   var btn = hdr && hdr.querySelector('.menu-btn');
   if (!hdr || !menu || !btn) return;
+  var EN = document.documentElement.lang === 'en';   // en/alternative/ mirrors alternative/; Latvian is the fallback
   var lbl = btn.querySelector('.menu-lbl'), open = false;
   var mq = window.matchMedia('(max-width: 860px)'), reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   function all(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
@@ -12,7 +13,7 @@ document.documentElement.classList.add('js');
     open = o && mq.matches;
     menu.hidden = !open;
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    lbl.textContent = open ? 'Aizvērt' : 'Izvēlne';
+    lbl.textContent = open ? (EN ? 'Close' : 'Aizvērt') : (EN ? 'Menu' : 'Izvēlne');
     hdr.classList.toggle('menu-open', open);
     document.documentElement.style.overflow = open ? 'hidden' : '';
     if (open && !reduced.matches && Element.prototype.animate) all('[data-menu-item]', menu).forEach(function (el, i) {
@@ -33,6 +34,13 @@ document.documentElement.classList.add('js');
     else if (!e.shiftKey && (i === -1 || i === f.length - 1)) { e.preventDefault(); f[0].focus(); }
   });
   (mq.addEventListener ? mq.addEventListener.bind(mq, 'change') : mq.addListener.bind(mq))(function () { if (!mq.matches && open) setMenu(false); });
+  // language switch: keep the current section (#ids are the same on both pages)
+  all('.lang a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      if (a.getAttribute('aria-current') || !location.hash) return;
+      a.href = a.getAttribute('href').split('#')[0] + location.hash;
+    });
+  });
   var sc = null;
   function onScroll() { var s = window.scrollY > 8; if (s !== sc) { sc = s; hdr.classList.toggle('scrolled', s); } }
   window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
@@ -130,7 +138,17 @@ document.documentElement.classList.add('js');
   if (!form || !window.fetch || !window.FormData) return;
   var sent = document.getElementById('alt-sent'), status = document.getElementById('alt-status');
   var F = function (n) { return form.elements[n]; };
-  var FAIL = 'Neizdevās nosūtīt. Lūdzu, mēģiniet vēlreiz vai sazinieties ar mums tieši: henrixband@gmail.com, +371 25 972 689.';
+  var EN = document.documentElement.lang === 'en';
+  var T = EN ? {
+    fail: 'Sending failed. Please try again or contact us directly: henrixband@gmail.com, +371 25 972 689.',
+    name: 'Please enter your name.', date: 'Please enter the event date.',
+    contact: 'Please enter an e-mail or phone number.', email: 'Please check the e-mail address.'
+  } : {
+    fail: 'Neizdevās nosūtīt. Lūdzu, mēģiniet vēlreiz vai sazinieties ar mums tieši: henrixband@gmail.com, +371 25 972 689.',
+    name: 'Norādiet savu vārdu.', date: 'Norādiet pasākuma datumu.',
+    contact: 'Norādiet e-pastu vai tālruni.', email: 'Pārbaudiet e-pasta adresi.'
+  };
+  var FAIL = T.fail;
   var errors = {};
 
   form.noValidate = true;          // custom messages below; native checks stay on when JS is off
@@ -138,10 +156,10 @@ document.documentElement.classList.add('js');
 
   function validate() {
     var e = {}, email = F('email').value.trim(), phone = F('Tālrunis').value.trim();
-    if (!F('Kontaktpersona').value.trim()) e.name = 'Norādiet savu vārdu.';
-    if (!F('Datums').value) e.date = 'Norādiet pasākuma datumu.';
-    if (!email && !phone) e.contact = 'Norādiet e-pastu vai tālruni.';
-    else if (email && !/^\S+@\S+\.\S+$/.test(email)) e.contact = 'Pārbaudiet e-pasta adresi.';
+    if (!F('Kontaktpersona').value.trim()) e.name = T.name;
+    if (!F('Datums').value) e.date = T.date;
+    if (!email && !phone) e.contact = T.contact;
+    else if (email && !/^\S+@\S+\.\S+$/.test(email)) e.contact = T.email;
     return e;
   }
   function showErrors() {
@@ -176,7 +194,7 @@ document.documentElement.classList.add('js');
     var btn = form.querySelector('button[type=submit]'); btn.disabled = true;
     var data = new FormData(form), d = dmy(F('Datums').value);
     data.set('Datums', d);
-    data.set('_subject', 'Henrix Alternative — jauns pieprasījums (' + d + ')');
+    data.set('_subject', 'Henrix Alternative — jauns pieprasījums' + (EN ? ' (EN, ' : ' (') + d + ')');
     // only an explicit success counts: FormSubmit can answer 200 with success "false" (e.g. before activation)
     fetch(form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), { method: 'POST', body: data, headers: { Accept: 'application/json' } })
       .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })

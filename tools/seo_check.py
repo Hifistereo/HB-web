@@ -85,10 +85,28 @@ class Page(HTMLParser):
 
 
 # indexable pages: path -> (canonical URL, <html lang>)
-PAGES = {"index.html": (SITE, "lv"), "en/index.html": (SITE + "en/", "en"), "alternative/index.html": (SITE + "alternative/", "lv")}
-# LV-only pages: no hreflang alternates (there is no /en/ twin), own JSON-LD types
-SINGLE = {"alternative/index.html": ("WebPage", "Service")}
-HREFLANG = {"lv": SITE, "en": SITE + "en/", "x-default": SITE}
+PAGES = {"index.html": (SITE, "lv"), "en/index.html": (SITE + "en/", "en"),
+         "alternative/index.html": (SITE + "alternative/", "lv"), "en/alternative/index.html": (SITE + "en/alternative/", "en")}
+# programme sub-pages: own JSON-LD types, no FAQPage
+SINGLE = {"alternative/index.html": ("WebPage", "Service"), "en/alternative/index.html": ("WebPage", "Service")}
+# LV/EN pairs: (LV page, EN page) -> expected hreflang alternates on both
+PAIRS = {("index.html", "en/index.html"): {"lv": SITE, "en": SITE + "en/", "x-default": SITE},
+         ("alternative/index.html", "en/alternative/index.html"):
+             {"lv": SITE + "alternative/", "en": SITE + "en/alternative/", "x-default": SITE + "alternative/"}}
+HREFLANG_OF = {page: alts for pair, alts in PAIRS.items() for page in pair}
+
+
+def ld_urls(node):
+    """every @id / url value in a JSON-LD tree"""
+    if isinstance(node, dict):
+        for k, v in node.items():
+            if k in ("@id", "url") and isinstance(v, str):
+                yield v
+            else:
+                yield from ld_urls(v)
+    elif isinstance(node, list):
+        for v in node:
+            yield from ld_urls(v)
 
 
 def check_page(path):
@@ -120,11 +138,9 @@ def check_page(path):
     if canon != [want_canon]:
         errors.append(f"{name}: canonical should be exactly {want_canon}, got {canon}")
     alts = {l.get("hreflang"): l.get("href") for l in p.links if l.get("rel") == "alternate" and l.get("hreflang")}
-    if name in SINGLE:
-        if alts:
-            errors.append(f"{name}: LV-only page should have no hreflang alternates, got {alts}")
-    elif alts != HREFLANG:
-        errors.append(f"{name}: hreflang alternates should be {HREFLANG}, got {alts}")
+    want_alts = HREFLANG_OF.get(name, {})
+    if alts != want_alts:
+        errors.append(f"{name}: hreflang alternates should be {want_alts}, got {alts}")
     if p.meta.get("og:url") != want_canon:
         errors.append(f"{name}: og:url should be {want_canon}")
     for ref in p.refs:
@@ -157,6 +173,12 @@ def check_page(path):
             errors.append(f"{name}: JSON-LD does not parse: {e}")
             continue
         types = {n.get("@type") for n in data.get("@graph", [data])}
+        if name in SINGLE:
+            # page-level nodes must point at this page, not its LV/EN twin (shared #band / #website ids are fine)
+            for u in ld_urls(data.get("@graph", [data])):
+                if u.startswith(SITE + "alternative/") or u.startswith(SITE + "en/alternative/"):
+                    if not u.startswith(want_canon):
+                        errors.append(f"{name}: JSON-LD @id/url points at the other language: {u}")
         for want in SINGLE.get(name, ("WebSite", "MusicGroup")):
             if want not in types:
                 warnings.append(f"{name}: JSON-LD has no {want}")
@@ -186,13 +208,21 @@ def check_files():
     for url, _ in PAGES.values():
         if url not in locs:
             errors.append(f"sitemap.xml: missing <loc>{url}</loc>")
+    # reciprocal hreflang: every page of a pair lists the same alternates as the page itself
+    by_page = {PAGES[p][0]: alts for p, alts in HREFLANG_OF.items()}
+    for u in tree.findall("s:url", ns):
+        loc = u.findtext("s:loc", namespaces=ns)
+        got = {l.get("hreflang"): l.get("href") for l in u.findall("{http://www.w3.org/1999/xhtml}link")}
+        want = by_page.get(loc, {})
+        if got != want:
+            errors.append(f"sitemap.xml: hreflang for {loc} should be {want}, got {got}")
     for loc in tree.findall(".//i:loc", ns):
         rel = loc.text.replace(SITE, "")
         if not (ROOT / rel).exists():
             errors.append(f"sitemap.xml: image missing on disk: {rel}")
     try:
         changed = subprocess.run(
-            ["git", "-C", str(ROOT), "log", "-1", "--format=%cs", "--", "index.html", "en/index.html", "alternative/index.html", "llms.txt"],
+            ["git", "-C", str(ROOT), "log", "-1", "--format=%cs", "--", *PAGES, "llms.txt"],
             capture_output=True, text=True, check=True).stdout.strip()
         if changed and lastmod and lastmod < changed:
             warnings.append(f"sitemap.xml: lastmod {lastmod} is older than last content change {changed}")
@@ -218,27 +248,28 @@ EN_ALLOWED_LV = {"Prāta Vētra", "Pa ceļam", "Kurtizāņu ugunskurs", "Kad Ē�
 LV_CHARS = re.compile(r"[āčēģīķļņšūžĀČĒĢĪĶĻŅŠŪŽ]")
 
 
-def check_parity(lv, en):
-    """en/index.html mirrors index.html: same ids, form fields/values and JS hooks; no untranslated text."""
+def check_parity(lv, en, en_name):
+    """the EN page mirrors its LV page: same ids, form fields/values and JS hooks; no untranslated text."""
     for what in ("ids", "fields", "hooks"):
         a, b = getattr(lv, what), getattr(en, what)
         if a != b:
             only_lv = [x for x in a if x not in b][:5]
             only_en = [x for x in b if x not in a][:5]
-            errors.append(f"LV/EN parity: {what} differ (only LV: {only_lv}, only EN: {only_en})")
+            errors.append(f"LV/EN parity ({en_name}): {what} differ (only LV: {only_lv}, only EN: {only_en})")
     for t in en.text:
         if LV_CHARS.search(t) and t not in EN_ALLOWED_LV:
-            errors.append(f"en/index.html: untranslated Latvian text? {t[:70]!r}")
+            errors.append(f"{en_name}: untranslated Latvian text? {t[:70]!r}")
 
 
 pages = {}
-for f in ("index.html", "en/index.html", "alternative/index.html", "404.html"):
+for f in (*PAGES, "404.html"):
     if (ROOT / f).exists():
         pages[f] = check_page(ROOT / f)
     elif f in PAGES:
         errors.append(f"{f} missing")
-if "index.html" in pages and "en/index.html" in pages:
-    check_parity(pages["index.html"], pages["en/index.html"])
+for lv_name, en_name in PAIRS:
+    if lv_name in pages and en_name in pages:
+        check_parity(pages[lv_name], pages[en_name], en_name)
 check_files()
 
 for w in warnings:
