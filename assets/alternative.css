@@ -57,10 +57,16 @@ section[id]{scroll-margin-top:72px}
 .brand-alt .x{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--r-red)}
 .brand-alt .alt{color:var(--r-red);transition:text-shadow 220ms var(--ease)}
 .brand-alt::after{content:"";position:absolute;left:18px;right:0;bottom:-6px;height:2px;background:var(--r-red);transform:scaleX(0);transform-origin:left;transition:transform 220ms var(--ease)}
-.brand-alt:hover::after,.brand-alt:focus-visible::after,.brand-alt[aria-current]::after{transform:scaleX(1)}
+.brand-alt:hover::after,.brand-alt:focus-visible::after{transform:scaleX(1)}
 .brand-alt:hover .alt,.brand-alt:focus-visible .alt{text-shadow:0 0 14px rgba(240,40,30,.65)}
 .brand:hover{color:inherit}
-@media (max-width:767px){.site-header .bar{gap:12px}.brands .wordmark{font-size:clamp(15px,4.8vw,22px);letter-spacing:.02em}.brand-alt{margin-left:9px;padding-left:9px}.brand-alt::after{left:9px;bottom:-4px}}
+/* current-page underline: Henrix Band = brand blue, Henrix Alternative = red; draws in on load */
+.brand:not(.brand-alt){position:relative}
+.brand:not(.brand-alt)::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:linear-gradient(90deg,#46A6EC 0%,#6260F8 100%);transform:scaleX(0);transform-origin:left;transition:transform 220ms var(--ease)}
+.brand:not(.brand-alt):hover::after,.brand:not(.brand-alt):focus-visible::after,.brand[aria-current]::after{transform:scaleX(1)}
+@keyframes brand-ul{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media (prefers-reduced-motion:no-preference){.brand[aria-current]::after{animation:brand-ul 700ms var(--ease) 250ms both}}
+@media (max-width:767px){.site-header .bar{gap:12px}.brands .wordmark{font-size:clamp(15px,4.8vw,22px);letter-spacing:.02em}.brand-alt{margin-left:9px;padding-left:9px}.brand-alt::after{left:9px;bottom:-4px}.brand:not(.brand-alt)::after{bottom:-4px}}
 .r-nav{display:flex;gap:36px;align-items:center}
 .r-nav-link{font:600 15px/1 var(--font-display);letter-spacing:.16em;text-transform:uppercase;color:var(--r-bone);text-decoration:none;padding:10px 0}
 @media (max-width:860px){.r-nav-link{display:none}html.js .r-nav{display:none}}
