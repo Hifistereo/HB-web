@@ -131,6 +131,76 @@ document.documentElement.classList.add('js');
   }
 })();
 
+/* hero clip (YouTube Short, id in data-yt). Same pattern as the main.js video card: a muted loop starts
+   when the card is on screen (not with reduced motion; browsers block autoplay with sound), the button
+   toggles sound. Before the loop has started, a click starts the video directly with sound. */
+(function () {
+  'use strict';
+  var vid = document.getElementById('alt-vid'), btn = vid && vid.querySelector('button');
+  if (!btn || !vid.dataset.yt) return;
+  var hint = vid.querySelector('.hint'), id = vid.dataset.yt;
+  var EN = document.documentElement.lang === 'en';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var ORIGIN = 'https://www.youtube-nocookie.com';
+  var SRC = ORIGIN + '/embed/' + id + '?autoplay=1&{m}loop=1&playlist=' + id + '&controls=0&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&enablejsapi=1';
+  var S = { frame: null, sound: false, unmutedOnce: false, ready: false, queue: [], ping: 0 };
+
+  function post(msg) { if (S.frame && S.frame.contentWindow) S.frame.contentWindow.postMessage(JSON.stringify(msg), ORIGIN); }
+  // commands sent before onReady are dropped by the player, so hold them until it is ready
+  function yt(func, args) {
+    var msg = { event: 'command', func: func, args: args || [] };
+    if (S.ready) post(msg); else S.queue.push(msg);
+  }
+  function mount(muted) {
+    var f = document.createElement('iframe');
+    f.title = EN ? 'Henrix Alternative rehearsal — video' : 'Henrix Alternative mēģinājums — video';
+    f.allow = 'autoplay; encrypted-media; picture-in-picture';
+    f.tabIndex = -1;
+    f.src = SRC.replace('{m}', muted ? 'mute=1&' : '');
+    f.addEventListener('load', function () {
+      setTimeout(function () { f.classList.add('ready'); }, 400);
+      // IFrame API handshake: announce we're listening until the player reports onReady
+      var tries = 0;
+      S.ping = setInterval(function () {
+        if (S.ready || ++tries > 60) { clearInterval(S.ping); return; }
+        post({ event: 'listening', id: 1, channel: 'widget' });
+      }, 250);
+    });
+    S.frame = f;
+    vid.insertBefore(f, vid.querySelector('.scrim'));
+  }
+  window.addEventListener('message', function (e) {
+    if (e.origin !== ORIGIN || !S.frame || e.source !== S.frame.contentWindow || S.ready) return;
+    var d; try { d = typeof e.data === 'string' ? JSON.parse(e.data) : e.data; } catch (err) { return; }
+    if (!d || (d.event !== 'onReady' && d.event !== 'initialDelivery' && d.event !== 'infoDelivery')) return;
+    S.ready = true; clearInterval(S.ping);
+    var q = S.queue; S.queue = [];
+    q.forEach(post);
+  });
+  function render() {
+    vid.classList.toggle('sound', S.sound);
+    hint.textContent = S.sound ? (EN ? 'Sound off' : 'Izslēgt skaņu') : S.frame ? (EN ? 'Sound on' : 'Ieslēgt skaņu') : (EN ? 'Play' : 'Atskaņot');
+    btn.setAttribute('aria-label', S.sound ? (EN ? 'Turn the video sound off' : 'Izslēgt video skaņu') : (EN ? 'Play the rehearsal video with sound' : 'Atskaņot mēģinājuma video ar skaņu'));
+    btn.setAttribute('aria-pressed', S.sound ? 'true' : 'false');
+  }
+  btn.addEventListener('click', function () {
+    if (!S.frame) { S.sound = S.unmutedOnce = true; mount(false); render(); return; }
+    if (S.sound) { yt('mute'); S.sound = false; }
+    else {
+      if (!S.unmutedOnce) { yt('seekTo', [0, true]); S.unmutedOnce = true; }
+      yt('unMute'); yt('setVolume', [100]); yt('playVideo'); S.sound = true;
+    }
+    render();
+  });
+  if (reduced.matches || !window.IntersectionObserver) return;
+  var io = new IntersectionObserver(function (entries) {
+    if (!entries[0].isIntersecting) return;
+    io.disconnect();
+    if (!S.frame && !reduced.matches) { mount(true); render(); }
+  }, { threshold: 0.25 });
+  io.observe(vid);
+})();
+
 /* booking form (FormSubmit). Same pattern as main.js: without JS the form posts normally. */
 (function () {
   'use strict';
